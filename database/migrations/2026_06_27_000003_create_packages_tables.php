@@ -34,7 +34,6 @@ return new class extends Migration
                 $table->dropColumn('package_name');
             }
             $table->foreignId('package_id')->nullable()->constrained('packages')->onDelete('set null');
-            $table->foreignId('created_by')->nullable()->constrained('users')->onDelete('set null');
         });
     }
 
@@ -46,8 +45,6 @@ return new class extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->dropForeign(['package_id']);
             $table->dropColumn('package_id');
-            $table->dropForeign(['created_by']);
-            $table->dropColumn('created_by');
             $table->string('package_name')->nullable();
         });
 
