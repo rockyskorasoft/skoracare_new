@@ -1,0 +1,135 @@
+{
+  "node_modules/.pnpm/@fortawesome+fontawesome-free@7.2.0/node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.woff2": {
+    "file": "assets/fa-brands-400-BP5tdqmh.woff2",
+    "src": "node_modules/.pnpm/@fortawesome+fontawesome-free@7.2.0/node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.woff2"
+  },
+  "node_modules/.pnpm/@fortawesome+fontawesome-free@7.2.0/node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.woff2": {
+    "file": "assets/fa-regular-400-nyy7hhHF.woff2",
+    "src": "node_modules/.pnpm/@fortawesome+fontawesome-free@7.2.0/node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.woff2"
+  },
+  "node_modules/.pnpm/@fortawesome+fontawesome-free@7.2.0/node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff2": {
+    "file": "assets/fa-solid-900-DRAAbZTg.woff2",
+    "src": "node_modules/.pnpm/@fortawesome+fontawesome-free@7.2.0/node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff2"
+  },
+  "node_modules/.pnpm/@fortawesome+fontawesome-free@7.2.0/node_modules/@fortawesome/fontawesome-free/webfonts/fa-v4compatibility.woff2": {
+    "file": "assets/fa-v4compatibility-DD84SGiu.woff2",
+    "src": "node_modules/.pnpm/@fortawesome+fontawesome-free@7.2.0/node_modules/@fortawesome/fontawesome-free/webfonts/fa-v4compatibility.woff2"
+  },
+  "node_modules/.pnpm/bootstrap-icons@1.13.1/node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff": {
+    "file": "assets/bootstrap-icons-BeopsB42.woff",
+    "src": "node_modules/.pnpm/bootstrap-icons@1.13.1/node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff"
+  },
+  "node_modules/.pnpm/bootstrap-icons@1.13.1/node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff2": {
+    "file": "assets/bootstrap-icons-mSm7cUeB.woff2",
+    "src": "node_modules/.pnpm/bootstrap-icons@1.13.1/node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff2"
+  },
+  "node_modules/.pnpm/daterangepicker@3.1.0/node_modules/daterangepicker/daterangepicker.css": {
+    "file": "assets/daterangepicker-D86R5IA3.css",
+    "src": "node_modules/.pnpm/daterangepicker@3.1.0/node_modules/daterangepicker/daterangepicker.css"
+  },
+  "node_modules/.pnpm/daterangepicker@3.1.0/node_modules/daterangepicker/daterangepicker.js": {
+    "file": "assets/daterangepicker-DLIYH_5x.js",
+    "name": "daterangepicker",
+    "src": "node_modules/.pnpm/daterangepicker@3.1.0/node_modules/daterangepicker/daterangepicker.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/custom.js"
+    ]
+  },
+  "resources/css/doctor/doctordashboard.css": {
+    "file": "assets/doctordashboard-v1WI7Pu3.css",
+    "name": "doctordashboard",
+    "names": [
+      "doctordashboard.css"
+    ],
+    "src": "resources/css/doctor/doctordashboard.css",
+    "isEntry": true
+  },
+  "resources/css/doctor/doctorsidebar.css": {
+    "file": "assets/doctorsidebar-DGfr8TXU.css",
+    "name": "doctorsidebar",
+    "names": [
+      "doctorsidebar.css"
+    ],
+    "src": "resources/css/doctor/doctorsidebar.css",
+    "isEntry": true
+  },
+  "resources/images/logo.jpg": {
+    "file": "assets/logo-BF9H76Az.jpg",
+    "src": "resources/images/logo.jpg"
+  },
+  "resources/images/murphy-medical-solutions-logo.png": {
+    "file": "assets/murphy-medical-solutions-logo-XPMa-4o7.png",
+    "src": "resources/images/murphy-medical-solutions-logo.png"
+  },
+  "resources/images/skoracare-login.png": {
+    "file": "assets/skoracare-login-BZkVt-N9.png",
+    "src": "resources/images/skoracare-login.png"
+  },
+  "resources/images/skoracare-logo.png": {
+    "file": "assets/skoracare-logo-D3gxLyu7.png",
+    "src": "resources/images/skoracare-logo.png"
+  },
+  "resources/js/custom.js": {
+    "file": "assets/custom-CsQsFYJE.js",
+    "name": "custom",
+    "src": "resources/js/custom.js",
+    "isEntry": true,
+    "dynamicImports": [
+      "node_modules/.pnpm/daterangepicker@3.1.0/node_modules/daterangepicker/daterangepicker.js"
+    ],
+    "css": [
+      "assets/custom-CUsITuaU.css"
+    ]
+  },
+  "resources/scss/custom.scss": {
+    "file": "assets/custom-CVA9NX6M.css",
+    "name": "custom",
+    "names": [
+      "custom.css"
+    ],
+    "src": "resources/scss/custom.scss",
+    "isEntry": true,
+    "assets": [
+      "assets/bootstrap-icons-mSm7cUeB.woff2",
+      "assets/bootstrap-icons-BeopsB42.woff",
+      "assets/fa-brands-400-BP5tdqmh.woff2",
+      "assets/fa-regular-400-nyy7hhHF.woff2",
+      "assets/fa-solid-900-DRAAbZTg.woff2",
+      "assets/fa-v4compatibility-DD84SGiu.woff2",
+      "assets/Laila-Light-CNiZeeBg.ttf",
+      "assets/Laila-Regular-Cszffzo3.ttf",
+      "assets/Laila-Medium-BjqlY9ET.ttf",
+      "assets/laila-SemiBold-CZAjUkjC.ttf",
+      "assets/Laila-Bold-g72P2L-l.ttf"
+    ]
+  },
+  "resources/scss/fonts/Laila-Bold.ttf": {
+    "file": "assets/Laila-Bold-g72P2L-l.ttf",
+    "src": "resources/scss/fonts/Laila-Bold.ttf"
+  },
+  "resources/scss/fonts/Laila-Light.ttf": {
+    "file": "assets/Laila-Light-CNiZeeBg.ttf",
+    "src": "resources/scss/fonts/Laila-Light.ttf"
+  },
+  "resources/scss/fonts/Laila-Medium.ttf": {
+    "file": "assets/Laila-Medium-BjqlY9ET.ttf",
+    "src": "resources/scss/fonts/Laila-Medium.ttf"
+  },
+  "resources/scss/fonts/Laila-Regular.ttf": {
+    "file": "assets/Laila-Regular-Cszffzo3.ttf",
+    "src": "resources/scss/fonts/Laila-Regular.ttf"
+  },
+  "resources/scss/fonts/Laila-SemiBold.ttf": {
+    "file": "assets/laila-SemiBold-CZAjUkjC.ttf",
+    "src": "resources/scss/fonts/Laila-SemiBold.ttf"
+  },
+  "resources/scss/fonts/laila-Bold.ttf": {
+    "file": "assets/Laila-Bold-g72P2L-l.ttf",
+    "src": "resources/scss/fonts/Laila-Bold.ttf"
+  },
+  "resources/scss/fonts/laila-SemiBold.ttf": {
+    "file": "assets/laila-SemiBold-CZAjUkjC.ttf",
+    "src": "resources/scss/fonts/Laila-SemiBold.ttf"
+  }
+}

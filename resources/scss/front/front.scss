@@ -1,0 +1,94 @@
+// Fonts
+@import "fonts";
+
+// Variables
+@import "variables";
+
+// Footer
+@import "footer";
+
+// Bootstrap
+@import "bootstrap/scss/bootstrap";
+
+// Common Css
+.divide-border-1 {
+  > * {
+    padding: 0.875rem 0;
+    @media (min-width:768px) {
+      border-right: 1px solid $primary;
+      &:first-child,&:last-child {
+        border-color: transparent;
+      }            
+    }
+  }
+}
+.main-inner-content {
+  min-height: $main-area-height;
+}
+// Global anchor Link Start
+a {transition: all 0.3s linear}
+// Global anchor Link End
+// Global Container Start
+.container {max-width: $container-max-size !important}
+// Global Container End
+
+// Global Input & Select Field Start
+.form-control,
+.form-select {
+  box-shadow: $input-box-shadow;
+  &:focus {
+    box-shadow: $input-box-shadow;
+  }
+}
+// Global Input & Select Field End
+// Global Button Css Start
+.btn {
+  box-shadow: $btn-box-shadow;
+  outline: none !important;
+  &:focus {
+    box-shadow: none !important;
+  }
+  &.btn-primary {
+    color: $primary-white;
+    background: $primary-gradient;
+    &:hover {
+      color: $btn-link-hover-color;
+      background: $secondary-gradient;
+    }
+  }
+  &.btn-secondary {
+    color: $primary-white;
+    background: $secondary-gradient;
+    &:hover {
+      color: $btn-link-hover-color;
+      background: $primary-gradient;
+    }
+  }
+}
+// Global Button Css End
+//  Global Scrollbar Css Start
+*::-webkit-scrollbar,
+*::-webkit-scrollbar-thumb {
+  width: .375rem;
+  height: .375rem;
+  border-radius: $global_corner_xl;
+  background-clip: padding-box;
+}
+*::-webkit-scrollbar-thumb {
+  background-color: #6E6E6E;
+  &:hover {
+    border-width: 10px;
+  }
+}
+*::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 2.375rem #979797;
+  border-radius: $global_corner_xl;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 1s linear;
+  &:hover {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+//  Global Scrollbar Css End

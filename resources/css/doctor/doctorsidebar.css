@@ -1,0 +1,362 @@
+/* ============================================================
+ *  doctorsidebar.css
+ *  Styles for the Doctor Panel sidebar layout matching screenshot.
+ *  Brand: Skoracare | Minimal White Stacked Sidebar
+ * ============================================================ */
+
+:root {
+    --dr-header-height:         70px;
+    --dr-sidebar-width:         110px;
+    --dr-sidebar-bg:            #ffffff;
+    --dr-sidebar-border:        #e6e8eb;
+    --dr-sidebar-text:          #637381;
+    --dr-sidebar-text-active:   #4e5bf2;       /* Active Purple/Blue */
+    --dr-sidebar-bg-active:     #f0f1ff;       /* Active Lavender Tint */
+    --dr-sidebar-hover:         #f8f9fa;
+    --dr-sidebar-badge-bg:      #f05a28;       /* Trial Orange */
+    --dr-transition:            0.2s ease-in-out;
+}
+
+/* ── Reset / Base ─────────────────────────────────────────── */
+body.doctor-page {
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa;
+}
+
+/* ── Top Header Bar (Full Width) ───────────────────────────── */
+.doctor-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--dr-header-height);
+    background-color: #ffffff;
+    border-bottom: 1px solid var(--dr-sidebar-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.5rem;
+    z-index: 1040;
+}
+
+/* Header Left: Logo */
+.dr-header-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.dr-header-logo-wrap {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    gap: 6px;
+}
+
+.dr-header-logo-img {
+    height: 32px;
+    width: auto;
+    object-fit: contain;
+}
+
+.dr-header-logo-text {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #4e5bf2;
+    letter-spacing: -0.5px;
+}
+
+/* Hamburger button for mobile */
+.dr-header-hamburger {
+    background: none;
+    border: none;
+    font-size: 1.3rem;
+    color: var(--dr-sidebar-text);
+    cursor: pointer;
+    padding: 0.4rem;
+    border-radius: 4px;
+}
+
+.dr-header-hamburger:hover {
+    background-color: var(--dr-sidebar-hover);
+    color: var(--dr-sidebar-text-active);
+}
+
+/* Header Right: Dropdown & Icons */
+.dr-header-right {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+/* Clinic Selector Dropdown */
+.dr-header-dropdown {
+    position: relative;
+}
+
+.dr-dropdown-toggle {
+    background-color: #f4f6f8;
+    border: 1px solid var(--dr-sidebar-border);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #333333;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: background-color 150ms;
+}
+
+.dr-dropdown-toggle:hover {
+    background-color: #eef1f4;
+}
+
+.dr-dropdown-arrow {
+    font-size: 0.75rem;
+    color: var(--dr-sidebar-text);
+    transition: transform 150ms;
+}
+
+.dr-dropdown-menu {
+    position: absolute;
+    top: 105%;
+    right: 0;
+    background-color: #ffffff;
+    border: 1px solid var(--dr-sidebar-border);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    list-style: none;
+    margin: 0;
+    padding: 0.5rem 0;
+    min-width: 220px;
+    z-index: 1050;
+    display: none;
+}
+
+.dr-dropdown-menu.show {
+    display: block;
+}
+
+.dr-dropdown-item {
+    display: block;
+    padding: 0.5rem 1rem;
+    color: #333333;
+    font-size: 0.88rem;
+    text-decoration: none;
+    transition: background-color 150ms;
+}
+
+.dr-dropdown-item:hover {
+    background-color: var(--dr-sidebar-hover);
+    color: var(--dr-sidebar-text-active);
+}
+
+/* Header Action Icons */
+.dr-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+}
+
+.dr-action-btn {
+    font-size: 1.35rem;
+    color: var(--dr-sidebar-text);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    transition: all var(--dr-transition);
+}
+
+.dr-action-btn:hover {
+    background-color: var(--dr-sidebar-hover);
+    color: var(--dr-sidebar-text-active);
+}
+
+.dr-action-btn.logout-btn:hover {
+    color: #ef4444;
+    background-color: #fef2f2;
+}
+
+/* ── Sidebar Container (Below Header) ──────────────────────── */
+.doctor-sidebar {
+    position: fixed;
+    top: var(--dr-header-height);
+    left: 0;
+    height: calc(100vh - var(--dr-header-height));
+    width: var(--dr-sidebar-width);
+    background-color: var(--dr-sidebar-bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-right: 1px solid var(--dr-sidebar-border);
+    z-index: 1030;
+    transition: transform var(--dr-transition);
+}
+
+/* ── Navigation Container ─────────────────────────────────── */
+.dr-sidebar-nav-container {
+    width: 100%;
+    flex: 1;
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+
+.dr-sidebar-nav-container::-webkit-scrollbar {
+    display: none;
+}
+
+.dr-sidebar-nav-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ── Nav Item ─────────────────────────────────────────────── */
+.dr-nav-item {
+    width: 100%;
+    border-bottom: 1px solid #fcfcfc;
+}
+
+.dr-nav-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.15rem 0.5rem 0.95rem;
+    text-decoration: none;
+    color: var(--dr-sidebar-text);
+    transition: all var(--dr-transition);
+    position: relative;
+    width: 100%;
+    text-align: center;
+}
+
+.dr-nav-link:hover {
+    background-color: var(--dr-sidebar-hover);
+    color: #333333;
+}
+
+/* Active State */
+.dr-nav-link.active {
+    background-color: var(--dr-sidebar-bg-active);
+    color: var(--dr-sidebar-text-active);
+}
+
+/* Left vertical active bar */
+.dr-nav-link.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background-color: var(--dr-sidebar-text-active);
+}
+
+/* ── Icon Wrapper ─────────────────────────────────────────── */
+.dr-nav-icon-wrapper {
+    position: relative;
+    font-size: 1.5rem;
+    margin-bottom: 0.4rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 32px;
+}
+
+.dr-nav-link.active .dr-nav-icon-wrapper {
+    color: var(--dr-sidebar-text-active);
+}
+
+/* ── Trial Badge ──────────────────────────────────────────── */
+.dr-trial-badge {
+    position: absolute;
+    top: -4px;
+    right: -28px;
+    background-color: var(--dr-sidebar-badge-bg);
+    color: #ffffff;
+    font-size: 0.6rem;
+    font-weight: 700;
+    padding: 1px 4px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* ── Label Text ───────────────────────────────────────────── */
+.dr-nav-label {
+    font-size: 0.74rem;
+    font-weight: 500;
+    line-height: 1.25;
+    display: block;
+    word-wrap: break-word;
+    max-width: 95px;
+}
+
+.dr-nav-link.active .dr-nav-label {
+    font-weight: 600;
+}
+
+/* ── Version Footer ───────────────────────────────────────── */
+.dr-sidebar-footer-version {
+    width: 100%;
+    padding: 0.8rem 0;
+    text-align: center;
+    border-top: 1px solid var(--dr-sidebar-border);
+    background-color: #fafafa;
+    flex-shrink: 0;
+}
+
+.dr-sidebar-footer-version span {
+    font-size: 0.72rem;
+    color: #a0aec0;
+    font-weight: 500;
+}
+
+/* ── Main Content Offset ──────────────────────────────────── */
+.doctor-main-content {
+    margin-left: var(--dr-sidebar-width);
+    margin-top: var(--dr-header-height);
+    transition: margin-left var(--dr-transition);
+    min-height: calc(100vh - var(--dr-header-height));
+    background-color: #fafbfb;
+}
+
+/* ── Mobile Overlay & Responsive ─────────────────────────── */
+.dr-sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 1029;
+}
+
+.dr-sidebar-overlay.active {
+    display: block;
+}
+
+@media (max-width: 768px) {
+    .doctor-sidebar {
+        transform: translateX(-100%);
+        transition: transform var(--dr-transition);
+    }
+
+    .doctor-sidebar.mobile-open {
+        transform: translateX(0);
+    }
+
+    .doctor-main-content {
+        margin-left: 0;
+    }
+}

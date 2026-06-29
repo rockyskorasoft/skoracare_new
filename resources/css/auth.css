@@ -1,0 +1,24 @@
+@import 'bootstrap/dist/css/bootstrap.min.css';
+@import 'bootstrap-icons/font/bootstrap-icons.css';
+
+body.auth-body {
+    background: linear-gradient(140deg, #f2f5ff 0%, #f8f9fb 45%, #fff 100%);
+    min-height: 100vh;
+}
+
+.login-sec {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+}
+
+.auth-card {
+    border: 0;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.5rem 1.5rem rgba(10, 28, 74, 0.12);
+}
+
+.auth-logo {
+    max-width: 180px;
+    margin: 0 auto;
+}

@@ -1,0 +1,27 @@
+// Footer Css Start
+.footer-main {
+  padding: 1.25rem 0 0.5rem;
+  background: $primary-black;
+  .footer-head {
+    margin-bottom: 1.25rem;
+    color: $primary;
+  }
+  .footer-list {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .copyright-sec {
+    color: $grey;
+    display: flex;
+    text-align: center;
+    margin-top: 2.5rem;
+    justify-content: center;
+    align-items: center;
+    gap: 0.25rem;
+  }
+}
+// Footer Css End

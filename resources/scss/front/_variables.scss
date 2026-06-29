@@ -1,0 +1,163 @@
+///////////////////////// Variables Start //////////////////////////
+// Custom Border Radius
+$global_corner_xl: 1.875rem; //used
+
+// Font Size Bootstrap Variables
+$font-size-base: 1rem; // Assumes the browser default, typically `16px`
+$h1-font-size: $font-size-base * 2.5;
+$h2-font-size: $font-size-base * 2;
+$h3-font-size: $font-size-base * 1.75; //used
+$h4-font-size: $font-size-base * 1.5; //used
+$h5-font-size: $font-size-base * 1.375; //used //22px
+$h6-font-size: $font-size-base * 1.125; //used //18px
+$font-size-lg: $font-size-base * 1.125; //used //18px
+$font-size-md: $font-size-base * 1; //used //16px
+$font-size-sm: $font-size-base * 1; //used //16px
+$font-size-xs: $font-size-base * .75;
+
+//colors
+$primary-white: #ffffff; //used
+$primary: #92D050; //used
+$dark: #172029; //used
+$primary-text: #5C6066;
+$primary-gradient: linear-gradient(360.02deg, #92D050 2.02%, #92D050 100%); //used
+$secondary: #5C6066; //used
+$secondary-bg: #181F2C; //used
+$secondary-gradient: linear-gradient(95.02deg, #313F4E 7.02%, #313F4E 95.7%);
+$profile-text-color: #8C8C8C;
+$success: #2ACE58; 
+$warning: #ffc107; 
+$error: #ff0000; 
+$danger: $error;
+$info: #2A7FCE;
+$black: #000000;
+$global-border-color: #d0d0d0;
+$primary-black: $black;
+$primary-overlay: #00467750;
+$table-border-color: #e0e0e0;
+$grey: #bbbbbb;
+
+// Body
+$body-bg: $primary-white; //used
+$body-color: $secondary; //used
+
+// Typography
+$font-family-sans-serif: 'Montserrat', sans-serif; //used
+$font-family-base: $font-family-sans-serif !default; //used
+
+//container variable
+$container-max-size: 92%;//used
+
+// Main Content Area Height
+$main-area-height: calc(100vh - 391px);//used
+
+// anchor links
+$link-color: $primary-white;
+$link-decoration: unset;
+$link-hover-color: $primary;
+
+//Button start
+$btn-padding-y: 0.625rem;
+$btn-padding-x: 1.25rem;
+$btn-font-family: $font-family-sans-serif;
+$btn-font-size: 0.875rem;
+$btn-link-color: $primary-white;
+$btn-link-hover-color: $primary-white;
+$btn-primary-color: $primary-white;
+$btn-bg: $primary; //used
+$btn-gradient: linear-gradient(95.02deg, #5C5524 7.02%, #5C5524 95.7%); //used
+$btn-box-shadow: inset 0rem 0.216rem 0.216rem rgba(0, 0, 0, 0.25), inset -0.5rem -0.5rem 0.8rem rgba(0, 0, 0, 0.3), inset 0.5rem 0.5rem 0.8rem rgba(255, 255, 255, 0.1);
+$btn-border-radius: 0.313rem;
+$btn-transition: all .3s linear;
+$btn-border-width: 0px;
+$input-focus-box-shadow: 0 0 0 0.125rem rgba(146, 208, 80, 0.25);
+$btn-font-weight: bold;
+
+// Nav pills Variables
+$nav-link-padding-y:                1.25rem;
+
+// Navbar
+$navbar-padding-x:                  1rem;
+$navbar-nav-link-padding-x:         1rem;
+$navbar-brand-font-size:            $font-size-lg;
+$line-height-base: 1;
+$nav-link-height:                   $font-size-base * $line-height-base + $nav-link-padding-y * 2;
+$navbar-brand-height:               $navbar-brand-font-size * $line-height-base;
+$navbar-brand-padding-y:            ($nav-link-height - $navbar-brand-height) * .25;
+$navbar-brand-margin-end:           1rem;
+
+$navbar-toggler-padding-y:          .25rem;
+$navbar-toggler-padding-x:          .75rem;
+$navbar-toggler-font-size:          $font-size-lg;
+$navbar-toggler-border-radius:      $btn-border-radius;
+// $navbar-toggler-focus-width:        $btn-focus-width;
+$navbar-toggler-transition:         box-shadow .15s ease-in-out;
+
+$navbar-dark-color:                 rgba($primary-white, 1);
+$navbar-dark-hover-color:           rgba($primary, .75);
+$navbar-dark-active-color:          $primary;
+$navbar-dark-disabled-color:        rgba($primary-white, .25);
+$navbar-dark-toggler-icon-bg:       url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'><path stroke='#{$navbar-dark-color}' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/></svg>");
+$navbar-dark-toggler-border-color:  rgba($primary-white, .1);
+
+// ========= font-size mixin start ==========
+// h1 style
+@mixin font-h1 {
+	font-size: $h1-font-size;line-height: 125%;font-weight: 900;color: $secondary;
+	@media(min-width:1200px) and (max-width:1620px) {font-size: calc($h1-font-size * 0.938)}
+	@media (max-width:1199px) {font-size: calc($h1-font-size * 0.875)}
+}
+// h2 style
+@mixin font-h2 {
+	font-size: $h2-font-size;line-height: 125%;font-weight: 700;color: $primary;
+	@media(min-width:1200px) and (max-width:1620px){font-size: calc($h2-font-size * 0.938)}
+	@media (max-width:1199px){font-size: calc($h2-font-size * 0.875)}
+}
+// h3 style
+@mixin font-h3 {
+	font-size: $h3-font-size;line-height: 125%;font-weight: 600;color: $secondary;
+	@media(min-width:1200px) and (max-width:1620px){font-size: calc($h3-font-size * 0.938)}
+	@media (max-width:1199px){font-size: calc($h3-font-size * 0.875)}
+}
+// h4 style
+@mixin font-h4 {
+	font-size: $h4-font-size;line-height: 125%;font-weight: 500;color: $primary;
+	@media(min-width:1200px) and (max-width:1620px){font-size: calc($h4-font-size * 0.938)}
+	@media (max-width:1199px){font-size: calc($h4-font-size * 0.875)}
+}
+// h5 style
+@mixin font-h5 {
+	font-size: $h5-font-size;line-height: 125%;font-weight: 500;color: $primary;
+	@media(min-width:1200px) and (max-width:1620px){font-size: calc($h5-font-size * 0.938)}
+	@media (max-width:1199px){font-size: calc($h5-font-size * 0.875)}
+}
+// h6 style
+@mixin font-h6 {
+	font-size: $h6-font-size;line-height: 150%;font-weight: 500;color: $secondary;
+	@media(min-width:1200px) and (max-width:1620px){font-size: calc($h6-font-size * 0.938)}
+	@media (max-width:1199px){font-size: calc($h6-font-size * 0.875)}
+}
+// paragraph style
+@mixin font-lg {
+	font-size: $font-size-lg;line-height: 150%;font-weight: 400;color: $primary;
+	@media(min-width:1200px) and (max-width:1620px){font-size: calc($font-size-lg * 0.938)}
+	@media (max-width:1199px){font-size: calc($font-size-lg * 0.875)}
+}
+// paragraph style
+@mixin font-base {
+	font-size: $font-size-base;line-height: 150%;font-weight: 500; margin-bottom: 0;
+	@media(min-width:1200px) and (max-width:1620px){font-size: calc($font-size-base * 0.938)}
+	@media (max-width:1199px){font-size: calc($font-size-base * 0.875)}
+}
+// span
+@mixin font-sm {
+	font-size: $font-size-sm;line-height: 150%;font-weight: 500;
+	@media(min-width:1200px) and (max-width:1620px){font-size: calc($font-size-sm * 0.938)}
+	@media (max-width:1199px){font-size: calc($font-size-sm * 0.875)}
+}
+// small
+@mixin font-xs {
+	font-size: $font-size-xs;line-height: 150%;font-weight: 100;color: $primary;
+	@media(min-width:1200px) and (max-width:1620px){font-size: calc($font-size-xs * 0.938)}
+	@media (max-width:1199px){font-size: calc($font-size-xs * 0.875)}
+}

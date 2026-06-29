@@ -1,0 +1,560 @@
+/* ============================================================
+ *  doctordashboard.css
+ *  Styles for the Doctor Dashboard page.
+ *  Brand: Skoracare | Murphy Medical Solutions
+ * ============================================================ */
+
+/* ── CSS Custom Properties ────────────────────────────────── */
+:root {
+    --dr-teal:          #2f8f83;
+    --dr-teal-dark:     #236d64;
+    --dr-teal-light:    #e8f5f4;
+    --dr-navy:          #0f172a;
+    --dr-white:         #ffffff;
+    --dr-bg:            #f8fafc;
+    --dr-border:        #eef1f6;
+    --dr-text-primary:  #0f172a;
+    --dr-text-secondary:#475569;
+    --dr-text-muted:    #64748b;
+    --dr-card-shadow:   0 4px 20px -2px rgba(15, 25, 35, 0.05);
+    --dr-card-hover-shadow: 0 10px 25px -5px rgba(15, 25, 35, 0.1);
+    --dr-radius:        0.75rem;
+    --dr-radius-sm:     0.5rem;
+}
+
+/* ── Base Reset for Doctor Pages ──────────────────────────── */
+.doctor-page * {
+    box-sizing: border-box;
+}
+
+.doctor-page {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--dr-bg);
+    color: var(--dr-text-primary);
+}
+
+/* ── Page Inner Wrapper ───────────────────────────────────── */
+.doctor-page-inner {
+    padding: 1.75rem 2rem;
+    max-width: 1250px;
+    margin: 0 auto;
+}
+
+/* ── Welcome Banner ───────────────────────────────────────── */
+.dr-welcome-banner {
+    background: linear-gradient(135deg, #111111 0%, #1a2332 50%, var(--dr-teal) 100%);
+    border-radius: var(--dr-radius);
+    padding: 2rem 2.25rem;
+    color: var(--dr-white);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 20px -2px rgba(15, 25, 35, 0.08);
+}
+
+/* Decorative circle blobs */
+.dr-welcome-banner::before {
+    content: '';
+    position: absolute;
+    width: 240px;
+    height: 240px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.04);
+    top: -70px;
+    right: -40px;
+    pointer-events: none;
+}
+
+.dr-welcome-banner::after {
+    content: '';
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.02);
+    bottom: -50px;
+    right: 140px;
+    pointer-events: none;
+}
+
+.dr-welcome-text h2 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin: 0 0 .4rem;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+}
+
+.dr-welcome-text p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Skoracare badge on banner */
+.dr-welcome-brand {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: var(--dr-radius-sm);
+    padding: .5rem 1rem;
+    font-size: .85rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.95);
+    white-space: nowrap;
+    position: relative;
+    z-index: 1;
+}
+
+.dr-welcome-brand img {
+    height: 24px;
+    filter: brightness(0) invert(1);
+    opacity: .95;
+}
+
+/* ── Quick Action Buttons ─────────────────────────────────── */
+.dr-quick-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .75rem;
+    margin-bottom: 2rem;
+}
+
+.dr-quick-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .55rem 1.25rem;
+    border-radius: var(--dr-radius-sm);
+    font-size: .85rem;
+    font-weight: 600;
+    text-decoration: none;
+    border: 1.5px solid transparent;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.dr-quick-btn-primary {
+    background: var(--dr-teal);
+    color: var(--dr-white);
+    border-color: var(--dr-teal);
+    box-shadow: 0 2px 4px rgba(47, 143, 131, 0.15);
+}
+
+.dr-quick-btn-primary:hover {
+    background: var(--dr-teal-dark);
+    border-color: var(--dr-teal-dark);
+    color: var(--dr-white);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(47, 143, 131, 0.25);
+}
+
+.dr-quick-btn-outline {
+    background: transparent;
+    color: var(--dr-teal);
+    border-color: var(--dr-teal);
+}
+
+.dr-quick-btn-outline:hover {
+    background: var(--dr-teal-light);
+    color: var(--dr-teal-dark);
+    transform: translateY(-1px);
+}
+
+/* ── Stat Cards Grid ──────────────────────────────────────── */
+.dr-stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 2rem;
+}
+
+/* ── Single Stat Card ─────────────────────────────────────── */
+.dr-stat-card {
+    background: var(--dr-white);
+    border: 1px solid var(--dr-border);
+    border-radius: var(--dr-radius);
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    box-shadow: var(--dr-card-shadow);
+    text-decoration: none;
+    color: inherit;
+    transition: box-shadow 0.25s ease, transform 0.25s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.dr-stat-card:hover {
+    box-shadow: var(--dr-card-hover-shadow);
+    transform: translateY(-2px);
+    color: inherit;
+}
+
+/* Coloured top-edge accent */
+.dr-stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--dr-teal);
+    border-radius: var(--dr-radius) var(--dr-radius) 0 0;
+}
+
+/* Per-card accent override */
+.dr-stat-card.accent-orange::before { background: #f59e0b; }
+.dr-stat-card.accent-purple::before { background: #7c3aed; }
+.dr-stat-card.accent-rose::before   { background: #e11d48; }
+
+/* Icon bubble */
+.dr-stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    background: var(--dr-teal-light);
+    color: var(--dr-teal);
+}
+
+.dr-stat-card.accent-orange .dr-stat-icon { background: #fff8e6; color: #f59e0b; }
+.dr-stat-card.accent-purple .dr-stat-icon { background: #f3f0ff; color: #7c3aed; }
+.dr-stat-card.accent-rose   .dr-stat-icon { background: #fff1f2; color: #e11d48; }
+
+/* Text */
+.dr-stat-body {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.dr-stat-label {
+    font-size: .78rem;
+    font-weight: 600;
+    color: var(--dr-text-muted);
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    margin-bottom: .25rem;
+}
+
+.dr-stat-value {
+    font-size: 1.65rem;
+    font-weight: 700;
+    color: var(--dr-text-primary);
+    line-height: 1.15;
+    word-break: break-word;
+}
+
+.dr-stat-sub {
+    font-size: .75rem;
+    color: var(--dr-text-secondary);
+    margin-top: .2rem;
+}
+
+/* ── Info / Content Cards ─────────────────────────────────── */
+.dr-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.dr-card {
+    background: var(--dr-white);
+    border: 1px solid var(--dr-border);
+    border-radius: var(--dr-radius);
+    box-shadow: var(--dr-card-shadow);
+    overflow: hidden;
+}
+
+.dr-card-header {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--dr-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.dr-card-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--dr-text-primary);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    letter-spacing: -0.01em;
+}
+
+.dr-card-title::before {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 16px;
+    background: var(--dr-teal);
+    border-radius: 2px;
+}
+
+.dr-card-body {
+    padding: 1.5rem;
+}
+
+/* ── Redesigned Doctor Profile Summary ────────────────────── */
+.dr-profile-summary {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--dr-border);
+    margin-bottom: 1.5rem;
+}
+
+.dr-avatar-wrapper {
+    flex-shrink: 0;
+}
+
+.dr-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--dr-teal-light);
+}
+
+.dr-avatar-placeholder {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background-color: var(--dr-teal-light);
+    color: var(--dr-teal);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.35rem;
+    font-weight: 700;
+    border: 2px solid var(--dr-teal-light);
+}
+
+.dr-profile-title h4 {
+    margin: 0 0 0.35rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--dr-text-primary);
+}
+
+/* ── Redesigned Profile details grid ───────────────────────── */
+.dr-profile-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+}
+
+.dr-profile-grid-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.85rem;
+}
+
+.dr-grid-item-full {
+    grid-column: span 2;
+}
+
+.dr-item-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: var(--dr-bg);
+    color: var(--dr-text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95rem;
+    flex-shrink: 0;
+}
+
+.dr-item-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.dr-item-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--dr-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.15rem;
+}
+
+.dr-item-value {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--dr-text-primary);
+    word-break: break-word;
+}
+
+/* ── Status Badge ─────────────────────────────────────────── */
+.dr-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    padding: .25rem .75rem;
+    border-radius: 999px;
+    font-size: .75rem;
+    font-weight: 600;
+}
+
+.dr-badge-active {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.dr-badge-inactive {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+/* ── Clinic List ──────────────────────────────────────────── */
+.dr-clinic-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: .85rem 0;
+    border-bottom: 1px solid var(--dr-border);
+}
+
+.dr-clinic-item:first-child {
+    padding-top: 0;
+}
+
+.dr-clinic-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.dr-clinic-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background: var(--dr-teal-light);
+    color: var(--dr-teal);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+.dr-clinic-info {
+    flex-grow: 1;
+}
+
+.dr-clinic-info .dr-clinic-name {
+    font-size: .875rem;
+    font-weight: 600;
+    color: var(--dr-text-primary);
+    margin: 0 0 .2rem;
+}
+
+.dr-clinic-info .dr-clinic-fee {
+    font-size: .78rem;
+    color: var(--dr-text-muted);
+    margin: 0;
+}
+
+.dr-clinic-info .dr-clinic-fee span {
+    font-weight: 600;
+    color: var(--dr-teal-dark);
+}
+
+/* Redesigned Empty state */
+.dr-empty-state {
+    text-align: center;
+    padding: 2.5rem 1.5rem;
+    color: var(--dr-text-secondary);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.dr-empty-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background-color: var(--dr-bg);
+    color: var(--dr-text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.dr-empty-state h5 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin: 0 0 0.35rem;
+    color: var(--dr-text-primary);
+}
+
+.dr-empty-state p {
+    font-size: .82rem;
+    margin: 0;
+    color: var(--dr-text-muted);
+    max-width: 260px;
+    line-height: 1.4;
+}
+
+/* ── Responsive ───────────────────────────────────────────── */
+@media (max-width: 991px) {
+    .dr-profile-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .dr-grid-item-full {
+        grid-column: span 1;
+    }
+}
+
+@media (max-width: 768px) {
+    .dr-info-grid {
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+    }
+
+    .dr-welcome-banner {
+        padding: 1.5rem;
+    }
+
+    .dr-welcome-text h2 {
+        font-size: 1.3rem;
+    }
+
+    .dr-welcome-brand {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .doctor-page-inner {
+        padding: 1.25rem 1rem;
+    }
+}
