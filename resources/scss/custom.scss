@@ -3923,3 +3923,25 @@ tr.ai-group-header.ai-group-brand {
 .custom-cancell:hover {
     background-color: #6b7a88 !important;
 }
+
+// Custom DataTable Button Class
+.my-custom-btn,
+button.my-custom-btn,
+.dt-buttons .my-custom-btn,
+.dt-buttons button.my-custom-btn {
+    background-color: #0B7682 !important;
+    background: #0B7682 !important;
+    border-color: #0B7682 !important;
+    color: #ffffff !important;
+    border-radius: 8px !important;
+    padding: 10px 20px !important;
+
+    &:hover,
+    &:focus,
+    &:active {
+        background-color: #095f68 !important;
+        background: #095f68 !important;
+        border-color: #095f68 !important;
+        color: #ffffff !important;
+    }
+}

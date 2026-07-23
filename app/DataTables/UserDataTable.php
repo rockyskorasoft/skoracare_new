@@ -87,12 +87,12 @@ class UserDataTable extends DataTable
         if ($userCreatePermission) {
             if ($canCreateLimit) {
                 $buttons[] = Button::make('add')
-                    ->attr(['class' => 'btn text-center btn-primary'])
+                    ->attr(['class' => 'btn text-center btn-primary my-custom-btn'])
                     ->text(__('buttons.create'));
             } else {
                 $buttons[] = Button::make('add')
                     ->attr([
-                        'class' => 'btn text-center btn-secondary disabled',
+                        'class' => 'btn text-center btn-secondary my-custom-btn disabled',
                         'disabled' => 'disabled',
                         'title' => 'User creation limit reached for your active package plan',
                         'style' => 'cursor: not-allowed; opacity: 0.65;'
