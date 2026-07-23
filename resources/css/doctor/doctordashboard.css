@@ -562,20 +562,3 @@
         color: #0B7682;
     }
 }
-
-/* ── Custom Button Class ──────────────────────────────────── */
-.my-custom-btn {
-    background-color: #0B7682 !important;
-    border-color: #0B7682 !important;
-    color: #fff !important;
-    border-radius: 8px !important;
-    padding: 10px 20px !important;
-}
-
-.my-custom-btn:hover,
-.my-custom-btn:focus,
-.my-custom-btn:active {
-    background-color: #095f68 !important;
-    border-color: #095f68 !important;
-    color: #fff !important;
-}

@@ -98,7 +98,7 @@ class StaffDataTable extends DataTable
         if ($staffCreatePermission) {
             if ($canCreateLimit) {
                 $buttons[] = Button::make('add')
-                    ->attr(['class' => 'btn text-center btn-primary'])
+                    ->attr(['class' => 'btn text-center my-custom-btn'])
                     ->text(__('buttons.create'));
             } else {
                 $buttons[] = Button::make('add')

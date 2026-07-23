@@ -37,7 +37,7 @@
     ]
   },
   "resources/css/doctor/doctordashboard.css": {
-    "file": "assets/doctordashboard-DdxjaJjY.css",
+    "file": "assets/doctordashboard-CGgF-aOE.css",
     "name": "doctordashboard",
     "names": [
       "doctordashboard.css"
@@ -87,7 +87,7 @@
     ]
   },
   "resources/scss/custom.scss": {
-    "file": "assets/custom-VVWh42Mx.css",
+    "file": "assets/custom-5Xi-tqv4.css",
     "name": "custom",
     "names": [
       "custom.css"
@@ -104,7 +104,7 @@
       "assets/Laila-Light-CNiZeeBg.ttf",
       "assets/Laila-Regular-Cszffzo3.ttf",
       "assets/Laila-Medium-BjqlY9ET.ttf",
-      "assets/Laila-SemiBold-CZAjUkjC.ttf",
+      "assets/laila-SemiBold-CZAjUkjC.ttf",
       "assets/Laila-Bold-g72P2L-l.ttf",
       "assets/search-mjaZLkQX.svg"
     ]
@@ -126,7 +126,7 @@
     "src": "resources/scss/fonts/Laila-Regular.ttf"
   },
   "resources/scss/fonts/Laila-SemiBold.ttf": {
-    "file": "assets/Laila-SemiBold-CZAjUkjC.ttf",
+    "file": "assets/laila-SemiBold-CZAjUkjC.ttf",
     "src": "resources/scss/fonts/Laila-SemiBold.ttf"
   },
   "resources/scss/fonts/laila-Bold.ttf": {
@@ -134,7 +134,7 @@
     "src": "resources/scss/fonts/Laila-Bold.ttf"
   },
   "resources/scss/fonts/laila-SemiBold.ttf": {
-    "file": "assets/Laila-SemiBold-CZAjUkjC.ttf",
+    "file": "assets/laila-SemiBold-CZAjUkjC.ttf",
     "src": "resources/scss/fonts/Laila-SemiBold.ttf"
   }
 }
