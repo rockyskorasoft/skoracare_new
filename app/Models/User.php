@@ -17,7 +17,7 @@ use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Permission\Traits\HasRoles;
 
-#[Fillable(['first_name', 'last_name', 'email', 'password', 'profile_pic', 'date_of_birth', 'phone_no', 'status', 'address', 'qualification', 'registration_number', 'package_id', 'created_by'])]
+#[Fillable(['first_name', 'last_name', 'email', 'password', 'profile_pic', 'date_of_birth', 'phone_no', 'status', 'address', 'qualification', 'registration_number', 'package_id', 'max_clinics', 'max_users', 'created_by'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -73,6 +73,14 @@ class User extends Authenticatable
     public function clinics(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Clinic::class, 'doctor_id');
+    }
+
+    /**
+     * Get the clinics assigned to this user / staff member.
+     */
+    public function assignedClinics(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Clinic::class, 'clinic_user', 'user_id', 'clinic_id')->withTimestamps();
     }
 
     /**
@@ -164,7 +172,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Check if doctor can create another clinic based on their package limit.
+     * Check if doctor can create another clinic based on assigned limit or package limit.
      */
     public function canCreateClinic(): bool
     {
@@ -172,20 +180,30 @@ class User extends Authenticatable
             return true;
         }
 
-        $package = $this->package;
-        if (!$package) {
-            return false;
+        // 1. Check custom assigned limit if set directly on user
+        if (isset($this->max_clinics) && $this->max_clinics !== null) {
+            if ((int)$this->max_clinics === -1) {
+                return true;
+            }
+            return $this->clinics()->count() < (int)$this->max_clinics;
         }
 
-        if ($package->clinic_limit === -1) {
+        // 2. Check active package limit
+        $package = $this->package;
+        if (!$package) {
+            // Allow 1 clinic if no package is assigned
+            return $this->clinics()->count() < 1;
+        }
+
+        if ((int)$package->clinic_limit === -1) {
             return true;
         }
 
-        return $this->clinics()->count() < $package->clinic_limit;
+        return $this->clinics()->count() < (int)$package->clinic_limit;
     }
 
     /**
-     * Check if doctor can create another user/staff based on their package limit.
+     * Check if doctor can create another user/staff based on assigned limit or package limit.
      */
     public function canCreateUser(): bool
     {
@@ -193,15 +211,24 @@ class User extends Authenticatable
             return true;
         }
 
-        $package = $this->package;
-        if (!$package) {
-            return false;
+        // 1. Check custom assigned limit if set on user
+        if (isset($this->max_users) && $this->max_users !== null) {
+            if ((int)$this->max_users === -1) {
+                return true;
+            }
+            return $this->createdUsers()->count() < (int)$this->max_users;
         }
 
-        if ($package->user_limit === -1) {
+        // 2. Check Package limit
+        $package = $this->package;
+        if (!$package) {
+            return $this->createdUsers()->count() < 1;
+        }
+
+        if ((int)$package->user_limit === -1) {
             return true;
         }
 
-        return $this->createdUsers()->count() < $package->user_limit;
+        return $this->createdUsers()->count() < (int)$package->user_limit;
     }
 }

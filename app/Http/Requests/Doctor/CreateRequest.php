@@ -29,6 +29,9 @@ class CreateRequest extends FormRequest
             'qualification' => 'nullable|string|max:100',
             'registration_number' => 'nullable|string|max:100',
             'address' => 'nullable|string|max:500',
+            'package_id' => 'nullable|exists:packages,id',
+            'max_clinics' => 'nullable|integer|min:-1',
+            'max_users' => 'nullable|integer|min:-1',
         ];
     }
 }

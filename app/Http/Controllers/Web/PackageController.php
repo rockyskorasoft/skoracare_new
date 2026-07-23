@@ -2,124 +2,157 @@
 
 namespace App\Http\Controllers\Web;
 
-use App\Http\Controllers\Controller;
-use App\Models\Package;
-use App\Models\Permission;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use App\DataTables\PackagesDataTable;
+use App\Http\Requests\Package\CreateRequest;
+use App\Http\Requests\Package\UpdateRequest;
+use App\Repositories\PermissionRepository;
+use App\Services\PackageService;
+use App\Support\SecureRouteParameter;
+use DB;
+use Exception;
 
-class PackageController extends Controller
+class PackageController extends WebController
 {
-    public function __construct()
-    {
-        $this->middleware(['permission:package-list'], ['only' => ['index']]);
+    protected $dbObject;
+
+    public function __construct(
+        public PackageService $packageService,
+        public PermissionRepository $permissionRepository
+    ) {
+        $this->dbObject = DB::class;
+        $this->middleware(['permission:package-list'], ['only' => ['index', 'pricing']]);
         $this->middleware(['permission:package-create'], ['only' => ['create', 'store']]);
         $this->middleware(['permission:package-edit'], ['only' => ['edit', 'update']]);
         $this->middleware(['permission:package-delete'], ['only' => ['destroy']]);
+        $this->middleware(['permission:package-show'], ['only' => ['show']]);
     }
 
-    public function index()
+    /**
+     * Render package datatable.
+     */
+    public function index(PackagesDataTable $dataTable)
     {
-        $packages = Package::withCount('users')->get();
-        return view('packages.index', compact('packages'));
+        return $dataTable->render('packages.index');
     }
 
+    /**
+     * Render pricing plans preview cards.
+     */
+    public function pricing()
+    {
+        $packages = \App\Models\Package::with('permissions')->where('status', 'active')->get();
+        return view('packages.pricing', compact('packages'));
+    }
+
+    /**
+     * Show create package form.
+     */
     public function create()
     {
-        $groupedPermissions = $this->getGroupedPermissions();
-        return view('packages.create', compact('groupedPermissions'));
+        $permissions = [
+            'children' => $this->permissionRepository->getAllData(),
+        ];
+        return view('packages.create', compact('permissions'));
     }
 
-    public function store(Request $request)
+    /**
+     * Store package and sync permissions.
+     */
+    public function store(CreateRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255|unique:packages,name',
-            'clinic_limit' => 'required|integer|min:-1',
-            'user_limit' => 'required|integer|min:-1',
-            'permissions' => 'nullable|array',
-            'permissions.*' => 'exists:permissions,id',
-        ]);
-
         try {
-            DB::beginTransaction();
-            $package = Package::create([
-                'name' => $request->name,
-                'clinic_limit' => $request->clinic_limit,
-                'user_limit' => $request->user_limit,
-            ]);
+            $requestData = $this->packageService->getDataFromRequest($request);
 
-            if ($request->has('permissions')) {
-                $package->permissions()->sync($request->permissions);
+            $this->dbObject::beginTransaction();
+            $package = $this->packageService->createData($requestData);
+
+            $parents = $request->input('parents', []);
+            $children = $request->input('children', []);
+            $permissionIds = array_filter(array_merge($parents, $children));
+
+            if (!empty($permissionIds)) {
+                $package->permissions()->sync($permissionIds);
             }
-            DB::commit();
 
-            return redirect()->route('admin.packages.index')
-                ->with('success', 'Package created successfully.');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return back()->withInput()->with('error', 'Error creating package: ' . $e->getMessage());
+            $this->dbObject::commit();
+
+            return $this->successResponse('admin.packages.index', trans('app.data_created', ['action' => 'Package']));
+        } catch (Exception $exception) {
+            $this->dbObject::rollBack();
+
+            return $this->errorResponse($exception);
         }
     }
 
-    public function edit($id)
+    /**
+     * Show package details.
+     */
+    public function show(string $id)
     {
-        $package = Package::with('permissions')->findOrFail($id);
-        $groupedPermissions = $this->getGroupedPermissions();
-        $assignedPermissionIds = $package->permissions->pluck('id')->toArray();
+        $packageId = SecureRouteParameter::decodeOrFail($id);
+        $package = $this->packageService->getDataById($packageId);
+        $package->load('permissions');
 
-        return view('packages.edit', compact('package', 'groupedPermissions', 'assignedPermissionIds'));
+        return view('packages.show', compact('package'));
     }
 
-    public function update(Request $request, $id)
+    /**
+     * Show edit package form.
+     */
+    public function edit(string $id)
     {
-        $package = Package::findOrFail($id);
-        
-        $request->validate([
-            'name' => 'required|string|max:255|unique:packages,name,' . $id,
-            'clinic_limit' => 'required|integer|min:-1',
-            'user_limit' => 'required|integer|min:-1',
-            'permissions' => 'nullable|array',
-            'permissions.*' => 'exists:permissions,id',
-        ]);
+        $packageId = SecureRouteParameter::decodeOrFail($id);
+        $package = $this->packageService->getDataById($packageId);
+        $package->load('permissions');
+
+        $permissions = [
+            'children' => $this->permissionRepository->getAllData(),
+        ];
+        $packagePermissionIds = $package->permissions->pluck('id')->toArray();
+
+        return view('packages.edit', compact('package', 'permissions', 'packagePermissionIds'));
+    }
+
+    /**
+     * Update package data and sync permissions.
+     */
+    public function update(UpdateRequest $request, string $id)
+    {
+        $packageId = SecureRouteParameter::decodeOrFail($id);
+        $requestData = $this->packageService->getDataFromRequest($request);
 
         try {
-            DB::beginTransaction();
-            $package->update([
-                'name' => $request->name,
-                'clinic_limit' => $request->clinic_limit,
-                'user_limit' => $request->user_limit,
-            ]);
+            $this->dbObject::beginTransaction();
+            $package = $this->packageService->updateData($packageId, $requestData);
 
-            $package->permissions()->sync($request->input('permissions', []));
-            DB::commit();
+            $parents = $request->input('parents', []);
+            $children = $request->input('children', []);
+            $permissionIds = array_filter(array_merge($parents, $children));
 
-            return redirect()->route('admin.packages.index')
-                ->with('success', 'Package updated successfully.');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return back()->withInput()->with('error', 'Error updating package: ' . $e->getMessage());
+            $package->permissions()->sync($permissionIds);
+
+            $this->dbObject::commit();
+
+            return $this->successResponse('admin.packages.index', trans('app.data_updated', ['action' => 'Package']));
+        } catch (Exception $exception) {
+            $this->dbObject::rollBack();
+
+            return $this->errorResponse($exception);
         }
     }
 
-    public function destroy($id)
+    /**
+     * Delete package.
+     */
+    public function destroy(string $id)
     {
         try {
-            $package = Package::findOrFail($id);
-            $package->delete();
+            $packageId = SecureRouteParameter::decodeOrFail($id);
+            $this->packageService->deleteDataById($packageId);
 
-            return redirect()->route('admin.packages.index')
-                ->with('success', 'Package deleted successfully.');
-        } catch (\Exception $e) {
-            return redirect()->route('admin.packages.index')
-                ->with('error', 'Error deleting package: ' . $e->getMessage());
+            return $this->successResponse('admin.packages.index', trans('app.data_deleted', ['action' => 'Package']));
+        } catch (Exception $exception) {
+            return $this->errorResponse($exception);
         }
-    }
-
-    private function getGroupedPermissions()
-    {
-        $permissions = Permission::with('parent')->get();
-        return $permissions->groupBy(function ($perm) {
-            return $perm->parent ? ucwords(str_replace('-', ' ', $perm->parent->name)) : 'General/Other';
-        });
     }
 }

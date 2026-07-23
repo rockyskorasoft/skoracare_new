@@ -36,7 +36,7 @@
 /* ── Page Inner Wrapper ───────────────────────────────────── */
 .doctor-page-inner {
     padding: 1.75rem 2rem;
-    max-width: 1250px;
+    max-width: 1343px;
     margin: 0 auto;
 }
 
@@ -337,8 +337,8 @@
 }
 
 .dr-avatar-placeholder {
-    width: 64px;
-    height: 64px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     background-color: var(--dr-teal-light);
     color: var(--dr-teal);

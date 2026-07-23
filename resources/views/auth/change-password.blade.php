@@ -1,4 +1,4 @@
-@extends(auth()->user()->hasRole(config('constants.doctor_role_name')) ? 'doctors.layouts.doctor-app' : 'layouts.app')
+@extends('layouts.app')
 @section('title')
     {{ __('Change Password') }}
 @endsection

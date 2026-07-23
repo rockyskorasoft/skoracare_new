@@ -46,6 +46,11 @@ class ClinicController extends WebController
      */
     public function create()
     {
+        $user = UserHelper::getLoggedInUser();
+        if (!$user->canCreateClinic()) {
+            return redirect()->route('admin.clinics.index')->with('error', 'You have reached your maximum clinic creation limit according to your assigned package plan. Please upgrade your package or contact Admin.');
+        }
+
         $doctors = User::role(config('constants.doctor_role_name'))->get();
         return view('clinics.create', compact('doctors'));
     }
@@ -55,6 +60,11 @@ class ClinicController extends WebController
      */
     public function store(CreateRequest $request)
     {
+        $user = UserHelper::getLoggedInUser();
+        if (!$user->canCreateClinic()) {
+            return redirect()->route('admin.clinics.index')->with('error', 'You have reached your maximum clinic creation limit according to your assigned package plan. Please upgrade your package or contact Admin.');
+        }
+
         try {
             $requestData = $this->clinicService->getDataFromRequest($request);
             if ($request->hasFile('logo')) {
@@ -143,5 +153,51 @@ class ClinicController extends WebController
         } catch (Exception $exception) {
             return $this->errorResponse($exception);
         }
+    }
+
+    /**
+     * Switch active clinic in session for the user.
+     */
+    public function switchClinic(\Illuminate\Http\Request $request)
+    {
+        $user = auth()->user();
+        $clinicId = $request->input('clinic_id');
+
+        if ($clinicId === 'all') {
+            if ($user && $user->hasRole([config('constants.super_admin_role_name'), config('constants.admin_role_name')])) {
+                session(['active_clinic_id' => 'all']);
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Switched to All Clinics view',
+                    'clinic_name' => 'All Clinics',
+                ]);
+            }
+            return response()->json(['success' => false, 'message' => 'Unauthorized for global view'], 403);
+        }
+
+        if ($clinicId) {
+            $clinic = \App\Models\Clinic::find($clinicId);
+            if (!$clinic) {
+                return response()->json(['success' => false, 'message' => 'Clinic not found'], 404);
+            }
+
+            // Verify Doctor owns or is linked to this clinic
+            if ($user && !$user->hasRole([config('constants.super_admin_role_name'), config('constants.admin_role_name')])) {
+                $userClinicIds = $user->clinics()->pluck('id')->toArray();
+                if (!in_array((int)$clinicId, $userClinicIds)) {
+                    return response()->json(['success' => false, 'message' => 'Unauthorized clinic access'], 403);
+                }
+            }
+
+            session(['active_clinic_id' => (int)$clinicId]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Active clinic updated successfully',
+                'clinic_name' => $clinic->name ?? 'Skoracare',
+            ]);
+        }
+
+        return response()->json(['success' => false, 'message' => 'Invalid clinic ID'], 400);
     }
 }

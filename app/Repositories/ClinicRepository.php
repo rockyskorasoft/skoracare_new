@@ -21,10 +21,15 @@ class ClinicRepository extends BaseRepository
     {
         return $request->only([
             'name',
+            'email',
             'doctor_id',
             'phone_no',
             'consultation_fee',
             'address',
+            'city',
+            'state',
+            'postal_code',
+            'status',
         ]);
     }
 }

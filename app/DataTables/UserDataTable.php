@@ -61,7 +61,11 @@ class UserDataTable extends DataTable
      */
     public function query(User $model): QueryBuilder
     {
-        return $model->newQuery();
+        $query = $model->newQuery();
+        if ($this->user && $this->user->hasRole(config('constants.doctor_role_name'))) {
+            $query->where('created_by', $this->user->id);
+        }
+        return $query;
     }
 
     /**
@@ -69,20 +73,32 @@ class UserDataTable extends DataTable
      */
     public function html(): HtmlBuilder
     {
-        $userCreate = $this->user->can('user-create');
+        $userCreatePermission = $this->user->can('user-create');
+        $canCreateLimit = $this->user->canCreateUser();
+
         $dataTable = $this->builder()
             ->setTableId('users')
             ->columns($this->getColumns())
             ->minifiedAjax()
             ->dom("<'d-flex justify-content-start mb-2'B><'search-bar-wrapper'lf>r<'table-wrapper yajra-table-custom-class table-responsive'tr><'pagination-wrapper'ip>")
-            // ->dom('Bfrtip')
             ->orderBy('3', 'desc');
 
         $buttons = [];
-        if ($userCreate) {
-            $buttons[] = Button::make('add')
-                ->attr(['class' => 'btn text-center btn-primary'])
-                ->text(__('buttons.create'));
+        if ($userCreatePermission) {
+            if ($canCreateLimit) {
+                $buttons[] = Button::make('add')
+                    ->attr(['class' => 'btn text-center btn-primary'])
+                    ->text(__('buttons.create'));
+            } else {
+                $buttons[] = Button::make('add')
+                    ->attr([
+                        'class' => 'btn text-center btn-secondary disabled',
+                        'disabled' => 'disabled',
+                        'title' => 'User creation limit reached for your active package plan',
+                        'style' => 'cursor: not-allowed; opacity: 0.65;'
+                    ])
+                    ->text(__('buttons.create') . ' (Limit Reached)');
+            }
         }
         $dataTable->buttons($buttons);
 

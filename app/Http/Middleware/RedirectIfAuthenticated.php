@@ -13,14 +13,6 @@ class RedirectIfAuthenticated
     public function handle(Request $request, Closure $next): Response
     {
         if (Auth::check()) {
-            /** @var User $user */
-            $user = Auth::user();
-
-            /* Doctors have their own dedicated dashboard */
-            if ($user->hasRole(config('constants.doctor_role_name'))) {
-                return redirect()->route('admin.doctor.dashboard');
-            }
-
             return redirect()->route('admin.dashboard.index');
         }
 

@@ -25,13 +25,17 @@
                         type="text" :value="old('name')" placeholder="Rehab Maxx Physiotherapy Clinic"
                         errorField="name" labelClass="required" />
 
+                    <x-input-field class="col-md-6" label="Clinic Email" name="email" id="email"
+                        type="email" :value="old('email')" placeholder="clinic@skoracare.com"
+                        errorField="email" />
+
                     <div class="col-md-6">
                         <label for="doctor_id" class="form-label required">Owner (Doctor)</label>
                         <select name="doctor_id" id="doctor_id" class="form-select @error('doctor_id') is-invalid @enderror">
                             <option value="">{{ __('labels.select') }}</option>
                             @foreach ($doctors as $doctor)
-                                <option value="{{ $doctor->id }}" {{ old('doctor_id') == $doctor->id ? 'selected' : '' }}>
-                                    {{ $doctor->name }}
+                                <option value="{{ $doctor->id }}" {{ old('doctor_id', auth()->user()->hasRole(config('constants.doctor_role_name')) ? auth()->id() : '') == $doctor->id ? 'selected' : '' }}>
+                                    Dr. {{ $doctor->first_name }} {{ $doctor->last_name }} ({{ $doctor->email }})
                                 </option>
                             @endforeach
                         </select>
@@ -48,15 +52,32 @@
                         type="number" step="0.01" :value="old('consultation_fee')" placeholder="400.00"
                         errorField="consultation_fee" labelClass="required" />
 
+                    <x-select-field class="col-md-6" label="Clinic Status" name="status" id="status"
+                        :options="[['id' => 'active', 'label' => 'Active'], ['id' => 'inactive', 'label' => 'Inactive']]"
+                        :value="old('status', 'active')" placeholder="{{ __('labels.select') }}"
+                        errorField="status" labelClass="required" />
+
                     <x-text-area-field
                         divClass="col-md-12"
                         label="Full Address"
                         name="address"
                         id="address"
-                        rows="4"
+                        rows="3"
                         :value="old('address')"
                         labelClass="required"
                     />
+
+                    <x-input-field class="col-md-4" label="City" name="city" id="city"
+                        type="text" :value="old('city')" placeholder="New Delhi"
+                        errorField="city" />
+
+                    <x-input-field class="col-md-4" label="State" name="state" id="state"
+                        type="text" :value="old('state')" placeholder="Delhi"
+                        errorField="state" />
+
+                    <x-input-field class="col-md-4" label="Postal Code / PIN" name="postal_code" id="postal_code"
+                        type="text" :value="old('postal_code')" placeholder="110001"
+                        errorField="postal_code" />
 
                     <div class="col-md-12">
                         <label for="logo" class="form-label">Clinic Logo</label>
@@ -66,8 +87,8 @@
                         @enderror
                     </div>
 
-                    <div class="col-12">
-                        <a href="{{ route('admin.clinics.index') }}" class="btn btn-primary cancel-btn mt-2 mt-sm-0">
+                    <div class="col-12 mt-4">
+                        <a href="{{ route('admin.clinics.index') }}" class="btn btn-secondary cancel-btn mt-2 mt-sm-0">
                             {{ __('labels.cancel') }}
                         </a>
                         <x-button type="submit" class="btn btn-primary" buttons="{{ __('buttons.create') }}" />

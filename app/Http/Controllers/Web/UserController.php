@@ -49,6 +49,11 @@ class UserController extends WebController
      */
     public function create()
     {
+        $user = UserHelper::getLoggedInUser();
+        if (!$user->canCreateUser()) {
+            return redirect()->route('admin.users.index')->with('error', 'You have reached your maximum user/staff creation limit according to your assigned package plan.');
+        }
+
         $roles = $this->roleService->getData();
 
         return view('users.create', compact('roles'));
@@ -59,6 +64,11 @@ class UserController extends WebController
      */
     public function store(CreateRequest $request)
     {
+        $user = UserHelper::getLoggedInUser();
+        if (!$user->canCreateUser()) {
+            return redirect()->route('admin.users.index')->with('error', 'You have reached your maximum user/staff creation limit according to your assigned package plan.');
+        }
+
         try {
             $requestData = $this->userService->getDataFromRequest($request);
             if ($request->hasFile('profile_pic')) {
@@ -68,11 +78,13 @@ class UserController extends WebController
 
             $statusId = CommonStatus::ACTIVE->value;
             $requestData['status'] = $statusId;
+            $requestData['created_by'] = auth()->id();
+
             $this->dbObject::beginTransaction();
-            $user = $this->userService->createData($requestData);
+            $userRecord = $this->userService->createData($requestData);
             $roleId = (int) $requestData['role'];
             if ($roleId) {
-                $user->assignRole($roleId);
+                $userRecord->assignRole($roleId);
             }
             $this->dbObject::commit();
             Password::sendResetLink(['email' => $user->email]);

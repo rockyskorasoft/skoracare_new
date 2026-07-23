@@ -17,9 +17,34 @@ class DashboardService
      */
     public function getDashboardData(): array
     {
-        $canViewActivities = auth()->user()?->can('dashboard-latest-activities-card') ?? false;
+        /** @var User $user */
+        $user = auth()->user();
+        $canViewActivities = $user?->can('dashboard-latest-activities-card') ?? false;
+
+        $isDoctor = $user ? $user->hasRole(config('constants.doctor_role_name')) : false;
+
+        $doctorData = null;
+        if ($user && ($isDoctor || !empty($user->qualification) || !empty($user->registration_number))) {
+            $userClinics = method_exists($user, 'clinics') ? $user->clinics()->latest()->get() : collect();
+            $isActive = $user->status === \App\Enums\CommonStatus::ACTIVE->value;
+
+            $doctorData = [
+                'name' => trim(($user->first_name ?? '') . ' ' . ($user->last_name ?? '')),
+                'email' => $user->email,
+                'clinic_count' => $userClinics->count(),
+                'qualification' => $user->qualification ?? 'N/A',
+                'registration_number' => $user->registration_number ?? 'N/A',
+                'is_active' => $isActive,
+                'status_label' => $isActive ? __('labels.active') : __('labels.inactive'),
+                'profile_pic' => $user->profile_pic,
+                'clinics' => $userClinics,
+            ];
+        }
 
         return [
+            'user' => $user,
+            'isDoctor' => $isDoctor,
+            'doctorData' => $doctorData,
             'stats' => $this->globalStats(),
             'latestActivities' => $canViewActivities ? $this->latestActivities() : collect(),
             'showLatestActivities' => $canViewActivities,
@@ -34,11 +59,22 @@ class DashboardService
      */
     private function globalStats(): array
     {
+        $user = auth()->user();
+        $activeClinicId = session('active_clinic_id');
+
+        $clinicQuery = Clinic::query();
+        if ($user && $user->hasRole(config('constants.doctor_role_name'))) {
+            $clinicQuery->where('doctor_id', $user->id);
+        }
+        if ($activeClinicId) {
+            $clinicQuery->where('id', $activeClinicId);
+        }
+
         return $this->visibleCards([
             $this->statCard('dashboard-users-card', __('labels.users'), User::count(), 'fa-solid fa-users', $this->routeIfCan('user-list', 'admin.users.index')),
-            $this->statCard('doctor-list', 'Doctors', User::role(config('constants.doctor_role_name'))->count(), 'fa-solid fa-user-doctor', $this->routeIfCan('doctor-list', 'admin.doctors.index')),
-            $this->statCard('clinic-list', __('labels.clinics'), Clinic::count(), 'fa-solid fa-hospital', $this->routeIfCan('clinic-list', 'admin.clinics.index')),
-            $this->statCard('role-list', __('labels.roles'), Role::count(), 'fa-solid fa-users-gear', $this->routeIfCan('role-list', 'admin.roles.index')),
+            $this->statCard('dashboard-doctors-card', 'Doctors', User::role(config('constants.doctor_role_name'))->count(), 'fa-solid fa-user-doctor', $this->routeIfCan('doctor-list', 'admin.doctors.index')),
+            $this->statCard('dashboard-clinics-card', __('labels.clinics'), $clinicQuery->count(), 'fa-solid fa-hospital', $this->routeIfCan('clinic-list', 'admin.clinics.index')),
+            $this->statCard('dashboard-roles-card', __('labels.roles'), Role::count(), 'fa-solid fa-users-gear', $this->routeIfCan('role-list', 'admin.roles.index')),
         ]);
     }
 

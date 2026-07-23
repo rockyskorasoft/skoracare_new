@@ -13,14 +13,10 @@ class DashboardController extends Controller
     public function __construct(public DashboardService $dashboardService){}
 
     /**
-     * Show dashboard landing page.
+     * Show dashboard landing page for all authenticated users.
      */
     public function index()
     {
-        if (auth()->check() && auth()->user()->hasRole(config('constants.doctor_role_name'))) {
-            return redirect()->route('admin.doctor.dashboard');
-        }
-
         $dashboardData = $this->dashboardService->getDashboardData();
 
         return view('dashboard.index', compact('dashboardData'));

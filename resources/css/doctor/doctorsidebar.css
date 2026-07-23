@@ -55,7 +55,7 @@ body.doctor-page {
 }
 
 .dr-header-logo-img {
-    height: 32px;
+    height: 92px;
     width: auto;
     object-fit: contain;
 }
@@ -180,8 +180,36 @@ body.doctor-page {
 }
 
 .dr-action-btn.logout-btn:hover {
-    color: #ef4444;
-    background-color: #fef2f2;
+    color: #dc2626 !important;
+    background-color: #fee2e2 !important;
+}
+
+/* User Avatar & Dropdown */
+.dr-avatar-btn {
+    cursor: pointer;
+    outline: none;
+}
+
+.dr-avatar-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #e2e8f0;
+}
+
+.dr-avatar-placeholder {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #e6f4f1;
+    color: #0d9488;
+    font-weight: 700;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #b2f5ea;
 }
 
 /* ── Sidebar Container (Below Header) ──────────────────────── */

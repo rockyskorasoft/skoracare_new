@@ -2,9 +2,10 @@
 
 namespace App\Repositories;
 
+use App\Support\SecureRouteParameter;
 use Exception;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 
 class BaseRepository
 {
@@ -19,8 +20,7 @@ class BaseRepository
     }
 
     /**
-     * This function retrieves an All data.
-     *
+     * This function retrieves All data.
      */
     public function getAllData()
     {
@@ -28,75 +28,70 @@ class BaseRepository
     }
 
     /**
-     * function to get the user data by id
+     * function to get the data by id (handles encrypted or plain integer IDs safely).
      *
-     * @param integer $dataId
+     * @param string $id
      * @return object
      */
     public function getDataById(string $id)
     {
-        $data =  $this->model::find($id);
+        $decodedId = SecureRouteParameter::decode($id) ?? $id;
+        $data = $this->model::find($decodedId);
         if (!$data) {
-            throw new Exception(trans('app.data_not_found'));
+            abort(404, trans('app.data_not_found') ?: 'Requested data not found');
         }
         return $data;
     }
 
-    /*
-    * Create a new record for the current model.
-    * This is the repository-level create operation used by service classes.
-    *
-    * @param array $data The validated model attributes.
-    * @return object The created model instance.
-    */
+    /**
+     * Create a new record for the current model.
+     *
+     * @param array $data The validated model attributes.
+     * @return object The created model instance.
+     */
     public function createData(array $data)
     {
         return $this->model->create($data);
     }
 
     /**
-     * This function get data value from dataId  and update data
+     * Update record data by ID.
      */
     public function updateData(string $id, array $updatedData)
     {
-        $data = $this->model::findOrFail($id);
+        $decodedId = SecureRouteParameter::decode($id) ?? $id;
+        $data = $this->model::find($decodedId);
         if (!$data) {
-            throw new Exception(trans('app.data_not_found'));
+            abort(404, trans('app.data_not_found') ?: 'Requested data not found');
         }
         $data->update($updatedData);
         return $data;
     }
 
     /**
-     * This function get Company value from companyId  and delete Company
+     * Delete record by ID.
      */
-
     public function deleteDataById(string $id)
     {
-        $data = $this->model::find($id);
+        $decodedId = SecureRouteParameter::decode($id) ?? $id;
+        $data = $this->model::find($decodedId);
         if (!$data) {
-            throw new Exception(trans('app.data_not_found'));
+            abort(404, trans('app.data_not_found') ?: 'Requested data not found');
         }
         $data->delete();
         return $data;
     }
 
-    /*
-    * function to validate the data which is coming from the request
-    *
-    * @param object $requestData
-    * @return array
-    */
+    /**
+     * Extract request attributes.
+     */
     public function getAllDataFromRequest($request)
     {
         return $request->only([]);
     }
 
     /**
-     * function to get the data of the basis of filter passed
-     *
-     * @param array $filters
-     * @return mixed
+     * Get data based on filter array.
      */
     public function getDataOnBasisOfFilter(array $filters): Collection
     {

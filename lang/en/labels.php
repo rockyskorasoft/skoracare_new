@@ -220,4 +220,7 @@ return [
     'login'              => 'Login',
     'password_hint'      => 'Minimum 8 characters',
     'dont_have_account'  => "Don't have an account?",
+    'doctors' => 'Doctors',
+    'patients' => 'Patients',
+    'logout' => 'Logout',
 ];

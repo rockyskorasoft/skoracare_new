@@ -6,6 +6,7 @@ use App\Traits\CommonTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -21,11 +22,16 @@ class Clinic extends Model
      */
     protected $fillable = [
         'name',
+        'email',
         'doctor_id',
         'phone_no',
         'consultation_fee',
         'address',
+        'city',
+        'state',
+        'postal_code',
         'logo',
+        'status',
         'created_by',
         'updated_by',
     ];
@@ -39,10 +45,15 @@ class Clinic extends Model
             ->logOnly([
                 'id',
                 'name',
+                'email',
                 'doctor_id',
                 'phone_no',
                 'consultation_fee',
                 'address',
+                'city',
+                'state',
+                'postal_code',
+                'status',
             ])->useLogName('Clinic');
     }
 
@@ -52,5 +63,13 @@ class Clinic extends Model
     public function doctor(): BelongsTo
     {
         return $this->belongsTo(User::class, 'doctor_id');
+    }
+
+    /**
+     * Get users / staff assigned to this clinic.
+     */
+    public function assignedUsers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'clinic_user', 'clinic_id', 'user_id')->withTimestamps();
     }
 }

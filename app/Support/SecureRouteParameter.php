@@ -34,6 +34,10 @@ class SecureRouteParameter
      */
     public static function decode(string $value): ?string
     {
+        if (ctype_digit((string) $value)) {
+            return (string) $value;
+        }
+
         try {
             $encryptedValue = self::encryptedValueFromRoute($value);
 

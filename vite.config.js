@@ -1,14 +1,11 @@
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
-import { bunny } from 'laravel-vite-plugin/fonts';
-import tailwindcss from '@tailwindcss/vite';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 
 export default defineConfig({
- 
     plugins: [
         laravel({
             input: [
@@ -21,6 +18,14 @@ export default defineConfig({
             refresh: true,
         }),
     ],
+    css: {
+        preprocessorOptions: {
+            scss: {
+                api: 'modern-compiler',
+                silenceDeprecations: ['import', 'global-builtin', 'color-functions', 'if-function'],
+            },
+        },
+    },
     resolve: {
         alias: {
             vue: 'vue/dist/vue.esm-bundler.js',
@@ -29,6 +34,29 @@ export default defineConfig({
         },
     },
     build: {
-        chunkSizeWarningLimit: 100000000,
+        chunkSizeWarningLimit: 1500,
+        rolldownOptions: {
+            checks: {
+                pluginTimings: false,
+            },
+        },
+        rollupOptions: {
+            output: {
+                manualChunks(id) {
+                    if (id.includes('node_modules')) {
+                        if (id.includes('ckeditor5')) {
+                            return 'vendor-ckeditor';
+                        }
+                        if (id.includes('datatables.net') || id.includes('jquery') || id.includes('select2') || id.includes('daterangepicker')) {
+                            return 'vendor-datatables';
+                        }
+                        if (id.includes('@fortawesome') || id.includes('bootstrap-icons')) {
+                            return 'vendor-icons';
+                        }
+                        return 'vendor';
+                    }
+                }
+            }
+        }
     },
 });

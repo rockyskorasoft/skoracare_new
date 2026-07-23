@@ -7,8 +7,10 @@ use App\Enums\CommonStatus;
 use App\Helpers\UserHelper;
 use App\Http\Requests\Doctor\CreateRequest;
 use App\Http\Requests\Doctor\UpdateRequest;
+use App\Models\Package;
 use App\Models\Role;
 use App\Models\User;
+use App\Repositories\PermissionRepository;
 use App\Services\UserService;
 use App\Support\SecureRouteParameter;
 use DB;
@@ -26,7 +28,8 @@ class DoctorController extends WebController
      * Configure dependencies and permission middleware.
      */
     public function __construct(
-        public UserService $userService
+        public UserService $userService,
+        public PermissionRepository $permissionRepository
     ) {
         $this->dbObject = DB::class;
         $this->middleware(['permission:doctor-list'], ['only' => ['index']]);
@@ -49,9 +52,20 @@ class DoctorController extends WebController
      */
     public function create()
     {
-        $permissionGroups = $this->getPermissionGroups();
-        $packages = \App\Models\Package::all();
-        return view('doctors.create', compact('permissionGroups', 'packages'));
+        $permissions = [
+            'children' => $this->permissionRepository->getAllData(),
+        ];
+        $packages = Package::with('permissions')->where('status', 'active')->get();
+
+        $packagePermissionsMap = $packages->mapWithKeys(function ($pkg) {
+            return [$pkg->id => [
+                'permission_ids' => $pkg->permissions->pluck('id')->toArray(),
+                'clinic_limit' => $pkg->clinic_limit,
+                'user_limit' => $pkg->user_limit,
+            ]];
+        });
+
+        return view('doctors.create', compact('permissions', 'packages', 'packagePermissionsMap'));
     }
 
     /**
@@ -68,17 +82,33 @@ class DoctorController extends WebController
 
             $statusId = CommonStatus::ACTIVE->value;
             $requestData['status'] = $statusId;
+            $requestData['created_by'] = auth()->id();
 
             $this->dbObject::beginTransaction();
             $user = $this->userService->createData($requestData);
-            
+
             $doctorRole = Role::where('name', config('constants.doctor_role_name'))->first();
             if ($doctorRole) {
                 $user->assignRole($doctorRole);
             }
-            
-            // Sync direct doctor permissions
-            $user->syncPermissions($request->input('permissions', []));
+
+            // Sync permissions from tree
+            $parents = $request->input('parents', []);
+            $children = $request->input('children', []);
+            $permissionIds = array_filter(array_merge($parents, $children));
+
+            // Also check direct package sync if package selected
+            if ($request->filled('package_id')) {
+                $pkg = Package::find($request->package_id);
+                if ($pkg) {
+                    $packagePermIds = $pkg->permissions->pluck('id')->toArray();
+                    $permissionIds = array_unique(array_merge($permissionIds, $packagePermIds));
+                }
+            }
+
+            if (!empty($permissionIds)) {
+                $user->permissions()->sync($permissionIds);
+            }
 
             $this->dbObject::commit();
             Password::sendResetLink(['email' => $user->email]);
@@ -98,14 +128,28 @@ class DoctorController extends WebController
     {
         $doctorId = SecureRouteParameter::decodeOrFail($id);
         $user = $this->userService->getDataById($doctorId);
+        $user->load('permissions');
+
         $statusData = array_map(fn($status) => [
             'id' => $status->value,
             'label' => __('labels.' . $status->value),
         ], CommonStatus::cases());
-        $permissionGroups = $this->getPermissionGroups();
-        $packages = \App\Models\Package::all();
 
-        return view('doctors.edit', compact('user', 'statusData', 'permissionGroups', 'packages'));
+        $permissions = [
+            'children' => $this->permissionRepository->getAllData(),
+        ];
+        $userPermissionIds = $user->permissions->pluck('id')->toArray();
+
+        $packages = Package::with('permissions')->get();
+        $packagePermissionsMap = $packages->mapWithKeys(function ($pkg) {
+            return [$pkg->id => [
+                'permission_ids' => $pkg->permissions->pluck('id')->toArray(),
+                'clinic_limit' => $pkg->clinic_limit,
+                'user_limit' => $pkg->user_limit,
+            ]];
+        });
+
+        return view('doctors.edit', compact('user', 'statusData', 'permissions', 'userPermissionIds', 'packages', 'packagePermissionsMap'));
     }
 
     /**
@@ -120,27 +164,42 @@ class DoctorController extends WebController
     }
 
     /**
-     * Update doctor profile data, image.
+     * Update doctor profile data, image, package & permissions.
      */
     public function update(UpdateRequest $request, string $id)
     {
         $doctorId = SecureRouteParameter::decodeOrFail($id);
         $requestData = $this->userService->getDataFromRequest($request);
+
         try {
             if ($request->hasFile('profile_pic')) {
                 $user = $this->userService->getDataById($doctorId);
                 $destinationPath = 'profile_images';
                 $filename = $user->profile_pic;
-                if (! empty($user->profile_pic)) {
+                if (!empty($user->profile_pic)) {
                     UserHelper::deleteImage($destinationPath, $filename);
                 }
                 $requestData['profile_pic'] = basename(UserHelper::uploadImage($request->file('profile_pic'), $destinationPath));
             }
+
             $this->dbObject::beginTransaction();
             $user = $this->userService->updateData($doctorId, $requestData);
-            
-            // Sync direct doctor permissions
-            $user->syncPermissions($request->input('permissions', []));
+
+            // Sync direct permissions from tree
+            $parents = $request->input('parents', []);
+            $children = $request->input('children', []);
+            $permissionIds = array_filter(array_merge($parents, $children));
+
+            // Also include package permissions if package selected
+            if ($request->filled('package_id')) {
+                $pkg = Package::find($request->package_id);
+                if ($pkg) {
+                    $packagePermIds = $pkg->permissions->pluck('id')->toArray();
+                    $permissionIds = array_unique(array_merge($permissionIds, $packagePermIds));
+                }
+            }
+
+            $user->permissions()->sync($permissionIds);
 
             $this->dbObject::commit();
 
@@ -159,84 +218,15 @@ class DoctorController extends WebController
     {
         try {
             $doctorId = SecureRouteParameter::decodeOrFail($id);
+            $user = $this->userService->getDataById($doctorId);
+            if (!empty($user->profile_pic)) {
+                UserHelper::deleteImage('profile_images', $user->profile_pic);
+            }
             $this->userService->deleteDataById($doctorId);
 
             return $this->successResponse('admin.doctors.index', trans('app.data_deleted', ['action' => 'Doctor']));
         } catch (Exception $exception) {
             return $this->errorResponse($exception);
         }
-    }
-
-    /**
-     * Get the defined doctor panel permission groups.
-     */
-    private function getPermissionGroups(): array
-    {
-        return [
-            'Appointment' => [
-                'list' => 'appointment-list',
-                'create' => 'appointment-create',
-                'edit' => 'appointment-edit',
-                'show' => 'appointment-show',
-                'delete' => 'appointment-delete',
-                'export' => 'appointment-export',
-            ],
-            'Ask Skoracare' => [
-                'list' => 'ask-skoracare-list',
-                'create' => 'ask-skoracare-create',
-                'edit' => 'ask-skoracare-edit',
-                'show' => 'ask-skoracare-show',
-                'delete' => 'ask-skoracare-delete',
-                'export' => 'ask-skoracare-export',
-            ],
-            'OPD Billing / Clinics' => [
-                'list' => 'clinic-list',
-                'create' => 'clinic-create',
-                'edit' => 'clinic-edit',
-                'show' => 'clinic-show',
-                'delete' => 'clinic-delete',
-                'export' => 'clinic-export',
-            ],
-            'All Patients' => [
-                'list' => 'patients-list',
-                'create' => 'patients-create',
-                'edit' => 'patients-edit',
-                'show' => 'patients-show',
-                'delete' => 'patients-delete',
-                'export' => 'patients-export',
-            ],
-            'Follow Up' => [
-                'list' => 'follow-up-list',
-                'create' => 'follow-up-create',
-                'edit' => 'follow-up-edit',
-                'show' => 'follow-up-show',
-                'delete' => 'follow-up-delete',
-                'export' => 'follow-up-export',
-            ],
-            'Pharmacy' => [
-                'list' => 'pharmacy-list',
-                'create' => 'pharmacy-create',
-                'edit' => 'pharmacy-edit',
-                'show' => 'pharmacy-show',
-                'delete' => 'pharmacy-delete',
-                'export' => 'pharmacy-export',
-            ],
-            'Data Analytics' => [
-                'list' => 'analytics-list',
-                'create' => 'analytics-create',
-                'edit' => 'analytics-edit',
-                'show' => 'analytics-show',
-                'delete' => 'analytics-delete',
-                'export' => 'analytics-export',
-            ],
-            'Messages' => [
-                'list' => 'messages-list',
-                'create' => 'messages-create',
-                'edit' => 'messages-edit',
-                'show' => 'messages-show',
-                'delete' => 'messages-delete',
-                'export' => 'messages-export',
-            ],
-        ];
     }
 }

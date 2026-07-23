@@ -37,7 +37,7 @@
     ]
   },
   "resources/css/doctor/doctordashboard.css": {
-    "file": "assets/doctordashboard-v1WI7Pu3.css",
+    "file": "assets/doctordashboard-eXxykokm.css",
     "name": "doctordashboard",
     "names": [
       "doctordashboard.css"
@@ -46,7 +46,7 @@
     "isEntry": true
   },
   "resources/css/doctor/doctorsidebar.css": {
-    "file": "assets/doctorsidebar-DGfr8TXU.css",
+    "file": "assets/doctorsidebar-BlFWcANq.css",
     "name": "doctorsidebar",
     "names": [
       "doctorsidebar.css"
@@ -61,6 +61,10 @@
   "resources/images/murphy-medical-solutions-logo.png": {
     "file": "assets/murphy-medical-solutions-logo-XPMa-4o7.png",
     "src": "resources/images/murphy-medical-solutions-logo.png"
+  },
+  "resources/images/search.svg": {
+    "file": "assets/search-mjaZLkQX.svg",
+    "src": "resources/images/search.svg"
   },
   "resources/images/skoracare-login.png": {
     "file": "assets/skoracare-login-BZkVt-N9.png",
@@ -83,7 +87,7 @@
     ]
   },
   "resources/scss/custom.scss": {
-    "file": "assets/custom-CVA9NX6M.css",
+    "file": "assets/custom-B9Gu4J92.css",
     "name": "custom",
     "names": [
       "custom.css"
@@ -101,7 +105,8 @@
       "assets/Laila-Regular-Cszffzo3.ttf",
       "assets/Laila-Medium-BjqlY9ET.ttf",
       "assets/laila-SemiBold-CZAjUkjC.ttf",
-      "assets/Laila-Bold-g72P2L-l.ttf"
+      "assets/Laila-Bold-g72P2L-l.ttf",
+      "assets/search-mjaZLkQX.svg"
     ]
   },
   "resources/scss/fonts/Laila-Bold.ttf": {

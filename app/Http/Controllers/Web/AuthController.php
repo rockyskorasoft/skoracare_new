@@ -51,11 +51,6 @@ class AuthController extends Controller
             auth()->login($user, $remember);
             $request->session()->regenerate();
 
-            /* Role-based redirect: Doctor → doctor dashboard, everyone else → admin dashboard */
-            if ($user->hasRole(config('constants.doctor_role_name'))) {
-                return redirect()->route('admin.doctor.dashboard');
-            }
-
             return redirect()->intended(route('admin.dashboard.index'));
         }
 
@@ -148,9 +143,6 @@ class AuthController extends Controller
 
     private function dashboardRouteName(): string
     {
-        if (auth()->check() && auth()->user()->hasRole(config('constants.doctor_role_name'))) {
-            return 'admin.doctor.dashboard';
-        }
         return 'admin.dashboard.index';
     }
 }

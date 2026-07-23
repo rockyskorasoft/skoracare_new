@@ -21,10 +21,15 @@ class UpdateRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:150',
+            'email' => 'nullable|email|max:150',
             'doctor_id' => 'required|exists:users,id',
             'phone_no' => 'nullable|digits_between:10,12',
             'consultation_fee' => 'required|numeric|min:0',
             'address' => 'required|string|max:500',
+            'city' => 'nullable|string|max:100',
+            'state' => 'nullable|string|max:100',
+            'postal_code' => 'nullable|string|max:20',
+            'status' => 'required|string|in:active,inactive',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ];
     }
