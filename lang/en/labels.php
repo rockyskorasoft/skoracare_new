@@ -223,4 +223,5 @@ return [
     'doctors' => 'Doctors',
     'patients' => 'Patients',
     'logout' => 'Logout',
+    'owner_doctor' => 'Owner Doctor',
 ];

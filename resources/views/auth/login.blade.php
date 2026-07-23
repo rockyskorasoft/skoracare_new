@@ -17,7 +17,6 @@
             <img src="{{ Vite::asset(config('constants.company_logo')) }}"
                  alt="Skoracare Logo"
                  class="sk-brand-logo">
-            <span class="sk-brand-name">Skoracare</span>
         </div>
 
         {{-- Medical illustration --}}
@@ -46,7 +45,6 @@
                 <img src="{{ Vite::asset(config('constants.company_logo')) }}"
                      alt="Skoracare"
                      class="sk-card-logo-img">
-                <span class="sk-card-brand">Skoracare</span>
             </div>
 
             <h1 class="sk-card-title">Login</h1>
@@ -137,7 +135,8 @@ body { margin: 0; padding: 0; font-family: 'Inter', 'Laila', sans-serif; }
 /* ── Wrapper — full-viewport split ───────────────────────── */
 .sk-login-wrapper {
     display: flex;
-    min-height: 100vh;
+    height: 100vh;
+    overflow: hidden;
 }
 
 /* ── LEFT PANEL ───────────────────────────────────────────── */
@@ -148,9 +147,11 @@ body { margin: 0; padding: 0; font-family: 'Inter', 'Laila', sans-serif; }
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    padding: 2.5rem 2.5rem 1.5rem;
+    padding: 1.75rem 2.5rem 1.25rem;
     position: relative;
     overflow: hidden;
+    height: 100%;
+    min-height: 0;
 }
 
 /* Decorative blob */
@@ -186,10 +187,12 @@ body { margin: 0; padding: 0; font-family: 'Inter', 'Laila', sans-serif; }
     align-self: flex-start;
     position: relative;
     z-index: 1;
+    max-height: 120px;
 }
 
 .sk-brand-logo {
-    height: 36px;
+    height: 96px;
+    max-height: 100%;
     width: auto;
     object-fit: contain;
 }
@@ -207,15 +210,20 @@ body { margin: 0; padding: 0; font-family: 'Inter', 'Laila', sans-serif; }
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 1.5rem 0;
+    padding: 0.75rem 0;
     position: relative;
     z-index: 1;
+    min-height: 0;
+    width: 100%;
+    overflow: hidden;
 }
 
 .sk-illustration {
     max-width: 380px;
-    width: 100%;
+    max-height: 100%;
+    width: auto;
     height: auto;
+    object-fit: contain;
     filter: drop-shadow(0 8px 24px rgba(15,25,35,.12));
 }
 
@@ -227,25 +235,25 @@ body { margin: 0; padding: 0; font-family: 'Inter', 'Laila', sans-serif; }
 }
 
 .sk-tagline h2 {
-    font-size: 1.45rem;
+    font-size: 1.35rem;
     font-weight: 700;
     color: #0f2e2a;
-    margin: 0 0 .5rem;
-    line-height: 1.3;
+    margin: 0 0 .35rem;
+    line-height: 1.25;
 }
 
 .sk-tagline p {
-    font-size: .9rem;
+    font-size: .85rem;
     color: #3a6b65;
     margin: 0;
-    line-height: 1.5;
+    line-height: 1.4;
 }
 
 /* ── Powered by ───────────────────────────────────────────── */
 .sk-powered {
     font-size: .72rem;
     color: #6aada8;
-    margin: 0;
+    margin: .5rem 0 0;
     position: relative;
     z-index: 1;
 }
@@ -262,6 +270,8 @@ body { margin: 0; padding: 0; font-family: 'Inter', 'Laila', sans-serif; }
     justify-content: center;
     padding: 2.5rem 2rem;
     box-shadow: -4px 0 24px rgba(15,25,35,.06);
+    height: 100%;
+    overflow-y: auto;
 }
 
 /* ── Card ─────────────────────────────────────────────────── */
@@ -278,7 +288,7 @@ body { margin: 0; padding: 0; font-family: 'Inter', 'Laila', sans-serif; }
     margin-bottom: 1.5rem;
 }
 
-.sk-card-logo-img { height: 28px; }
+.sk-card-logo-img { height: 98px; }
 
 .sk-card-brand {
     font-size: 1.1rem;
@@ -426,9 +436,15 @@ body { margin: 0; padding: 0; font-family: 'Inter', 'Laila', sans-serif; }
 
 /* ── Responsive — stack on mobile ────────────────────────── */
 @media (max-width: 900px) {
-    .sk-login-wrapper { flex-direction: column; }
+    .sk-login-wrapper {
+        flex-direction: column;
+        height: auto;
+        min-height: 100vh;
+        overflow: auto;
+    }
 
     .sk-login-left {
+        height: auto;
         padding: 1.75rem 1.5rem 1.25rem;
         min-height: 40vh;
     }

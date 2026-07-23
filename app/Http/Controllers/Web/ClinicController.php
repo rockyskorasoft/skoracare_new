@@ -181,9 +181,17 @@ class ClinicController extends WebController
                 return response()->json(['success' => false, 'message' => 'Clinic not found'], 404);
             }
 
-            // Verify Doctor owns or is linked to this clinic
+            // Verify User owns or is assigned to this clinic
             if ($user && !$user->hasRole([config('constants.super_admin_role_name'), config('constants.admin_role_name')])) {
-                $userClinicIds = $user->clinics()->pluck('id')->toArray();
+                if ($user->hasRole(config('constants.doctor_role_name'))) {
+                    $userClinicIds = $user->clinics()->pluck('id')->toArray();
+                } else {
+                    $userClinicIds = $user->assignedClinics()->pluck('id')->toArray();
+                    if (empty($userClinicIds) && $user->creator) {
+                        $userClinicIds = $user->creator->clinics()->pluck('id')->toArray();
+                    }
+                }
+
                 if (!in_array((int)$clinicId, $userClinicIds)) {
                     return response()->json(['success' => false, 'message' => 'Unauthorized clinic access'], 403);
                 }

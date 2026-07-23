@@ -49,11 +49,11 @@ class StaffController extends WebController
             return redirect()->route('admin.staff.index')->with('error', 'You have reached your maximum staff creation limit according to your assigned package plan.');
         }
 
-        $doctors = User::role(config('constants.doctor_role_name'))->get();
+        $doctors = User::role(config('constants.doctor_role_name'))->with('clinics')->get();
         
         // Clinics available for selection
         if ($authUser->hasRole([config('constants.super_admin_role_name'), config('constants.admin_role_name')])) {
-            $clinics = Clinic::all();
+            $clinics = Clinic::with('doctor')->get();
             $roles = Role::whereNotIn('name', [config('constants.super_admin_role_name'), config('constants.doctor_role_name')])->get();
             $availablePermissions = Permission::whereNotNull('parent_id')->with('parent')->get();
         } else {
@@ -152,10 +152,10 @@ class StaffController extends WebController
         $staff = User::with(['assignedClinics', 'roles', 'permissions'])->findOrFail($staffId);
         $authUser = UserHelper::getLoggedInUser();
 
-        $doctors = User::role(config('constants.doctor_role_name'))->get();
+        $doctors = User::role(config('constants.doctor_role_name'))->with('clinics')->get();
 
         if ($authUser->hasRole([config('constants.super_admin_role_name'), config('constants.admin_role_name')])) {
-            $clinics = Clinic::all();
+            $clinics = Clinic::with('doctor')->get();
             $roles = Role::whereNotIn('name', [config('constants.super_admin_role_name'), config('constants.doctor_role_name')])->get();
             $availablePermissions = Permission::whereNotNull('parent_id')->with('parent')->get();
         } else {

@@ -7,12 +7,24 @@
     /** @var \App\Models\User $authUser */
     $authUser = auth()->user();
     $isSuperAdminOrAdmin = $authUser && $authUser->hasRole([config('constants.super_admin_role_name'), config('constants.admin_role_name')]);
+    $isDoctor = $authUser && $authUser->hasRole(config('constants.doctor_role_name'));
     
-    // Fetch clinics: for doctors, get their own clinics; for admin/super_admin, get all clinics
+    // Fetch clinics: 
+    // - Super Admin / Admin: all clinics
+    // - Doctor: doctor's owned clinics
+    // - Staff: only assigned clinics (via assignedClinics pivot table)
     if ($isSuperAdminOrAdmin) {
         $clinics = \App\Models\Clinic::latest()->get();
-    } elseif ($authUser && method_exists($authUser, 'clinics')) {
+    } elseif ($isDoctor) {
         $clinics = $authUser->clinics()->latest()->get();
+    } elseif ($authUser) {
+        $assigned = $authUser->assignedClinics()->latest()->get();
+        if ($assigned->isNotEmpty()) {
+            $clinics = $assigned;
+        } else {
+            // Fallback to creator doctor's clinics if no specific assigned clinics in pivot
+            $clinics = $authUser->creator ? $authUser->creator->clinics()->latest()->get() : collect();
+        }
     } else {
         $clinics = collect();
     }

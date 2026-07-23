@@ -83,14 +83,20 @@
                         <small class="text-muted d-block mb-3">Check the clinics this staff member is authorized to access and operate in.</small>
                         
                         <div class="border rounded p-3 bg-light">
+                            <div id="no_clinics_msg" class="alert alert-info py-2 mb-2 d-none">
+                                <i class="fa-solid fa-info-circle me-1"></i>Please select an Owner Doctor above to load their clinics.
+                            </div>
                             <div class="row g-3">
                                 @forelse($clinics as $clinic)
-                                    <div class="col-md-4">
+                                    <div class="col-md-4 clinic-item-col" data-doctor-id="{{ $clinic->doctor_id }}">
                                         <div class="form-check bg-white p-2 border rounded">
-                                            <input type="checkbox" name="clinic_ids[]" value="{{ $clinic->id }}" id="clinic_chk_{{ $clinic->id }}" class="form-check-input ms-1 me-2"
+                                            <input type="checkbox" name="clinic_ids[]" value="{{ $clinic->id }}" id="clinic_chk_{{ $clinic->id }}" class="form-check-input ms-1 me-2 clinic-checkbox"
                                                 {{ (is_array(old('clinic_ids')) && in_array($clinic->id, old('clinic_ids'))) ? 'checked' : '' }}>
                                             <label class="form-check-label fw-semibold" for="clinic_chk_{{ $clinic->id }}">
                                                 <i class="fa-solid fa-clinic-medical me-1 text-primary"></i>{{ $clinic->name }}
+                                                @if($authUser->hasRole([config('constants.super_admin_role_name'), config('constants.admin_role_name')]))
+                                                    <small class="text-muted d-block ms-4" style="font-size: 0.75rem;">(Dr. {{ $clinic->doctor?->first_name ?? '' }} {{ $clinic->doctor?->last_name ?? '' }})</small>
+                                                @endif
                                             </label>
                                         </div>
                                     </div>
@@ -144,3 +150,50 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const doctorSelect = document.getElementById('doctor_id');
+    const isSuperAdminOrAdmin = {{ $authUser->hasRole([config('constants.super_admin_role_name'), config('constants.admin_role_name')]) ? 'true' : 'false' }};
+
+    if (isSuperAdminOrAdmin && doctorSelect) {
+        function filterClinicsByDoctor() {
+            const selectedDocId = doctorSelect.value;
+            const clinicCols = document.querySelectorAll('.clinic-item-col');
+            const noClinicsMsg = document.getElementById('no_clinics_msg');
+            let visibleCount = 0;
+
+            clinicCols.forEach(function (col) {
+                const docId = col.getAttribute('data-doctor-id');
+                if (!selectedDocId) {
+                    col.style.display = 'none';
+                } else if (docId === selectedDocId) {
+                    col.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    col.style.display = 'none';
+                    const chk = col.querySelector('.clinic-checkbox');
+                    if (chk) chk.checked = false;
+                }
+            });
+
+            if (noClinicsMsg) {
+                if (!selectedDocId) {
+                    noClinicsMsg.innerHTML = '<i class="fa-solid fa-info-circle me-1"></i>Please select an Owner Doctor above to load their clinics.';
+                    noClinicsMsg.classList.remove('d-none');
+                } else if (visibleCount === 0) {
+                    noClinicsMsg.innerHTML = '<i class="fa-solid fa-exclamation-triangle me-1"></i>No clinics found for the selected doctor.';
+                    noClinicsMsg.classList.remove('d-none');
+                } else {
+                    noClinicsMsg.classList.add('d-none');
+                }
+            }
+        }
+
+        doctorSelect.addEventListener('change', filterClinicsByDoctor);
+        filterClinicsByDoctor();
+    }
+});
+</script>
+@endpush
