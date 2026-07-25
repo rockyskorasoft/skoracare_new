@@ -82,6 +82,128 @@
                 </div>
             @endif
 
+            @php
+                $pkgExpiry = $dashboardData['packageExpiryInfo'] ?? [
+                    'is_expired' => false,
+                    'is_doctor' => false,
+                    'doctor_name' => '',
+                    'package_name' => '',
+                    'expires_at' => null,
+                    'support_phone' => config('constants.support_phone', '+91 921 7375 831 / 835'),
+                    'support_email' => config('constants.support_email', 'info@skoracares.com'),
+                ];
+            @endphp
+
+            @if (!empty($pkgExpiry['is_expired']))
+                <div class="card border-0 mb-4 shadow-lg overflow-hidden position-relative"
+                     style="background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #311042 100%); border-radius: 20px; border-left: 6px solid #ef4444 !important;">
+                    
+                    {{-- Ambient Glowing Background Effect --}}
+                    <div style="position: absolute; top: -50px; right: -50px; width: 220px; height: 220px; background: rgba(239, 68, 68, 0.15); filter: blur(60px); border-radius: 50%; pointer-events: none;"></div>
+
+                    <div class="card-body p-4 p-md-5 position-relative text-white">
+                        <div class="row align-items-center gy-4">
+                            
+                            {{-- Content Column --}}
+                            <div class="col-lg-7">
+                                <div class="d-flex align-items-center gap-3 mb-3">
+                                    <div class="d-flex align-items-center justify-content-center bg-danger bg-opacity-25 text-danger rounded-circle shadow-sm"
+                                         style="width: 52px; height: 52px; min-width: 52px; font-size: 1.5rem; border: 1px solid rgba(239,68,68,0.4);">
+                                        <i class="fa-solid fa-triangle-exclamation"></i>
+                                    </div>
+                                    <div>
+                                        <span class="badge bg-danger bg-opacity-25 text-danger border border-danger border-opacity-25 rounded-pill px-3 py-1 text-uppercase fw-bold" style="font-size: 0.72rem; letter-spacing: 0.08em;">
+                                            {{ __('labels.package_expired_title') }}
+                                        </span>
+                                        <h4 class="mb-0 text-white mt-1 fw-bold" style="font-size: 1.4rem; letter-spacing: -0.01em;">
+                                            @if($pkgExpiry['is_doctor'])
+                                                {{ __('labels.package_expired_title') }}
+                                            @else
+                                                Doctor Subscription Expired
+                                            @endif
+                                        </h4>
+                                    </div>
+                                </div>
+
+                                <p class="text-white-50 mb-3 fs-6" style="line-height: 1.6;">
+                                    @if($pkgExpiry['is_doctor'])
+                                        {{ __('labels.package_expired_subtitle') }}
+                                    @else
+                                        {{ __('labels.package_expired_staff_notice') }}
+                                    @endif
+                                </p>
+
+                                @if(!empty($pkgExpiry['expires_at']))
+                                    <div class="d-inline-flex align-items-center gap-2 px-3 py-2 rounded-3 bg-white bg-opacity-10 border border-white border-opacity-10 text-white-50 small">
+                                        <i class="fa-solid fa-calendar-xmark text-danger"></i>
+                                        <span>Plan Expired Date: <strong class="text-white">{{ $pkgExpiry['expires_at'] }}</strong></span>
+                                    </div>
+                                @endif
+                            </div>
+
+                            {{-- Actions Column --}}
+                            <div class="col-lg-5">
+                                <div class="bg-white bg-opacity-10 p-3 p-md-4 rounded-4 border border-white border-opacity-10 backdrop-blur">
+                                    <div class="fw-semibold text-uppercase text-white-50 mb-3" style="font-size: 0.75rem; letter-spacing: 0.06em;">
+                                        <i class="fa-solid fa-headset me-1 text-danger"></i> {{ __('labels.contact_support') }}
+                                    </div>
+
+                                    <div class="d-flex flex-column gap-2">
+                                        {{-- Call Support Pill --}}
+                                        <a href="tel:+919217375831"
+                                           class="btn btn-outline-light border-white border-opacity-25 rounded-3 py-2 px-3 text-start d-flex align-items-center justify-content-between text-decoration-none"
+                                           style="transition: all 0.2s ease;">
+                                            <div class="d-flex align-items-center gap-3">
+                                                <i class="fa-solid fa-phone-volume text-danger fs-5"></i>
+                                                <div>
+                                                    <div class="text-white-50 small" style="font-size: 0.72rem;">{{ __('labels.call_now') }}</div>
+                                                    <div class="fw-bold text-white fs-6">{{ $pkgExpiry['support_phone'] }}</div>
+                                                </div>
+                                            </div>
+                                            <i class="fa-solid fa-chevron-right text-white-50 small"></i>
+                                        </a>
+
+                                        {{-- Email Support Pill --}}
+                                        <a href="mailto:{{ $pkgExpiry['support_email'] }}"
+                                           class="btn btn-outline-light border-white border-opacity-25 rounded-3 py-2 px-3 text-start d-flex align-items-center justify-content-between text-decoration-none"
+                                           style="transition: all 0.2s ease;">
+                                            <div class="d-flex align-items-center gap-3">
+                                                <i class="fa-solid fa-paper-plane text-danger fs-5"></i>
+                                                <div>
+                                                    <div class="text-white-50 small" style="font-size: 0.72rem;">{{ __('labels.email_us') }}</div>
+                                                    <div class="fw-bold text-white fs-6">{{ $pkgExpiry['support_email'] }}</div>
+                                                </div>
+                                            </div>
+                                            <i class="fa-solid fa-chevron-right text-white-50 small"></i>
+                                        </a>
+
+                                        @if($pkgExpiry['is_doctor'])
+                                            {{-- Renew Package Button --}}
+                                            @can('package-list')
+                                                <a href="{{ route('admin.packages.index') }}"
+                                                   class="btn rounded-3 py-2.5 px-3 fw-bold text-center text-white d-flex align-items-center justify-content-center gap-2 shadow mt-1"
+                                                   style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); border: none;">
+                                                    <i class="fa-solid fa-crown"></i>
+                                                    <span>{{ __('labels.renew_package') }}</span>
+                                                </a>
+                                            @else
+                                                <a href="tel:+919217375831"
+                                                   class="btn rounded-3 py-2.5 px-3 fw-bold text-center text-white d-flex align-items-center justify-content-center gap-2 shadow mt-1"
+                                                   style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); border: none;">
+                                                    <i class="fa-solid fa-crown"></i>
+                                                    <span>{{ __('labels.renew_package') }}</span>
+                                                </a>
+                                            @endcan
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            @endif
+
             {{-- ── Stats Grid ────────────────────────────────────────── --}}
             <div class="dr-stat-grid mb-4">
 

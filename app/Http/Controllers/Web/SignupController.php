@@ -51,14 +51,20 @@ class SignupController extends Controller
                 'status'     => CommonStatus::ACTIVE->value,
             ];
 
-            /* Create the user entry in the users table */
-            $user = User::create($data);
-
             /* Resolve role name from the UserType enum value */
-            $roleName = match (UserType::from($request->user_type)) {
+            $userTypeEnum = UserType::from($request->user_type);
+            $roleName = match ($userTypeEnum) {
                 UserType::DOCTOR  => config('constants.doctor_role_name'),
                 UserType::PATIENT => config('constants.patient_role_name'),
             };
+
+            /* If Doctor registration, set default 14-day trial package expiration */
+            if ($userTypeEnum === UserType::DOCTOR) {
+                $data['package_expires_at'] = now()->addDays(14);
+            }
+
+            /* Create the user entry in the users table */
+            $user = User::create($data);
 
             /* Assign the resolved role using Spatie */
             $role = Role::where('name', $roleName)->first();

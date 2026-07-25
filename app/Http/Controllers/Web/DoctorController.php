@@ -83,6 +83,9 @@ class DoctorController extends WebController
             $statusId = CommonStatus::ACTIVE->value;
             $requestData['status'] = $statusId;
             $requestData['created_by'] = auth()->id();
+            if (empty($requestData['package_expires_at'])) {
+                $requestData['package_expires_at'] = now()->addDays(30);
+            }
 
             $this->dbObject::beginTransaction();
             $user = $this->userService->createData($requestData);

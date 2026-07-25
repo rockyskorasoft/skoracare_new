@@ -224,4 +224,14 @@ return [
     'patients' => 'Patients',
     'logout' => 'Logout',
     'owner_doctor' => 'Owner Doctor',
+
+    /* ── Package Expiry Labels ── */
+    'package_expired_title'    => 'Subscription Plan Expired!',
+    'package_expired_subtitle' => 'Your active package plan validity has ended. Upgrade or renew your package now to restore complete access to all CRM modules and services.',
+    'package_expired_staff_notice' => 'Your primary Doctor subscription package for this clinic has expired. Please contact your Doctor or Administrator to renew access.',
+    'call_now'                 => 'Call Now',
+    'email_us'                 => 'Email Us',
+    'renew_package'            => 'Renew / Upgrade Package',
+    'contact_support'          => 'Contact Support',
+    'package_expires_at'       => 'Package Expiry Date',
 ];

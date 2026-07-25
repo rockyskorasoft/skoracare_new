@@ -41,10 +41,13 @@ class DashboardService
             ];
         }
 
+        $packageExpiryInfo = app(UserService::class)->checkPackageExpiry($user);
+
         return [
             'user' => $user,
             'isDoctor' => $isDoctor,
             'doctorData' => $doctorData,
+            'packageExpiryInfo' => $packageExpiryInfo,
             'stats' => $this->globalStats(),
             'latestActivities' => $canViewActivities ? $this->latestActivities() : collect(),
             'showLatestActivities' => $canViewActivities,

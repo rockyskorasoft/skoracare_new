@@ -24,6 +24,11 @@ class Activity extends ModelsActivity
 
             $activity->ip_address = request()?->ip();
 
+            if (empty($activity->clinic_id)) {
+                $activity->clinic_id = ($subject->clinic_id ?? null)
+                    ?: UserHelper::getSelectedClinicId();
+            }
+
             $activity->created_by = $activity->created_by
                 ?: ($subject->created_by ?? null)
                 ?: $user?->id;

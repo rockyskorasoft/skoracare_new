@@ -90,10 +90,14 @@ class ActivityLogDataTable extends DataTable
             ->orderBy('id', 'desc');
 
         $user = $this->user;
-        if ($user && ! $user->hasRole(config('constants.super_admin_role_name'))) {
-            $query->where(function ($activityQuery) use ($user) {
+        if ($user && ! $user->hasRole(config('constants.super_admin_role_name')) && ! $user->hasRole(config('constants.admin_role_name'))) {
+            $selectedClinicId = UserHelper::getSelectedClinicId();
+            $query->where(function ($activityQuery) use ($user, $selectedClinicId) {
                 $activityQuery->where('causer_id', $user->id)
                     ->orWhere('created_by', $user->id);
+                if (!empty($selectedClinicId)) {
+                    $activityQuery->orWhere('clinic_id', $selectedClinicId);
+                }
             });
         }
 

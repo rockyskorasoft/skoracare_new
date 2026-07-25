@@ -18,6 +18,9 @@ return new class extends Migration
             if (!Schema::hasColumn('users', 'max_users')) {
                 $table->integer('max_users')->nullable()->after('max_clinics')->comment('Custom user/staff limit assigned by Admin, null uses package limit');
             }
+            if (!Schema::hasColumn('users', 'package_expires_at')) {
+                $table->timestamp('package_expires_at')->nullable()->after('max_users')->comment('Expiration date/time of doctor subscription package');
+            }
         });
     }
 
@@ -32,6 +35,9 @@ return new class extends Migration
             }
             if (Schema::hasColumn('users', 'max_users')) {
                 $table->dropColumn('max_users');
+            }
+            if (Schema::hasColumn('users', 'package_expires_at')) {
+                $table->dropColumn('package_expires_at');
             }
         });
     }

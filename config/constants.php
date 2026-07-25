@@ -14,4 +14,6 @@ return [
     'super_admin_role_value' => 1,
     'company_logo' => 'resources/images/skoracare-logo.png',
     'default_image' => 'resources/images/user-avtar.svg',
+    'support_phone' => '+91 921 7375 831 / 835',
+    'support_email' => 'info@skoracares.com',
 ];

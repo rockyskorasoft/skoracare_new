@@ -21,9 +21,13 @@ trait ClinicTrait
     {
         static::creating(function ($model) {
             if (empty($model->clinic_id)) {
-                $selectedClinicId = UserHelper::getSelectedClinicId();
-                if (!empty($selectedClinicId)) {
-                    $model->clinic_id = $selectedClinicId;
+                if (isset($model->subject) && !empty($model->subject->clinic_id)) {
+                    $model->clinic_id = $model->subject->clinic_id;
+                } else {
+                    $selectedClinicId = UserHelper::getSelectedClinicId();
+                    if (!empty($selectedClinicId)) {
+                        $model->clinic_id = $selectedClinicId;
+                    }
                 }
             }
         });
@@ -32,7 +36,15 @@ trait ClinicTrait
             if (auth()->check()) {
                 $selectedClinicId = UserHelper::getSelectedClinicId();
                 if (!empty($selectedClinicId)) {
-                    $builder->where($builder->getModel()->getTable() . '.clinic_id', $selectedClinicId);
+                    $table = $builder->getModel()->getTable();
+                    if ($table === 'activity_log') {
+                        $builder->where(function ($q) use ($table, $selectedClinicId) {
+                            $q->where($table . '.clinic_id', $selectedClinicId)
+                              ->orWhereNull($table . '.clinic_id');
+                        });
+                    } else {
+                        $builder->where($table . '.clinic_id', $selectedClinicId);
+                    }
                 }
             }
         });
