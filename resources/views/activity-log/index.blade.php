@@ -22,7 +22,7 @@
                             <div class="employees-number"><span class="font-h3 fw-bold">
                                 </span></div>
                             <div class="filter-btn me-3"><button
-                                    class="gap-2  btn d-flex align-items-center collapsed btn btn-primary"
+                                    class="gap-2  btn d-flex align-items-center collapsed btn my-custom-btn"
                                     data-bs-toggle="collapse" data-bs-target="#accordian-filter" aria-expanded="false"
                                     aria-controls="accordian-filter"><img src="">{{ __('buttons.filter') }}</button>
                             </div>

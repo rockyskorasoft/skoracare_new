@@ -51,4 +51,52 @@ class UserHelper
         }
         return false;
     }
+
+    /**
+     * Get the active/selected clinic ID from session or user context.
+     *
+     * @return int|null
+     */
+    public static function getSelectedClinicId()
+    {
+        if (!Auth::check()) {
+            return null;
+        }
+
+        $activeClinicId = session('active_clinic_id');
+
+        if ($activeClinicId === 'all') {
+            return null;
+        }
+
+        if (!empty($activeClinicId) && is_numeric($activeClinicId)) {
+            return (int) $activeClinicId;
+        }
+
+        $user = Auth::user();
+        if ($user) {
+            $isSuperAdminOrAdmin = $user->hasRole([
+                config('constants.super_admin_role_name'),
+                config('constants.admin_role_name'),
+            ]);
+
+            if ($isSuperAdminOrAdmin) {
+                return null;
+            }
+
+            if ($user->hasRole(config('constants.doctor_role_name'))) {
+                $clinic = $user->clinics()->first();
+            } else {
+                $clinic = $user->assignedClinics()->first()
+                    ?? ($user->creator ? $user->creator->clinics()->first() : null);
+            }
+
+            if ($clinic) {
+                session(['active_clinic_id' => $clinic->id]);
+                return $clinic->id;
+            }
+        }
+
+        return null;
+    }
 }

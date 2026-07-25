@@ -73,7 +73,7 @@ class RolesDataTable extends DataTable
                         [
                             'extend' => 'add',
                             'text' => __('buttons.create'),
-                            'attr' => ['class' => 'btn btn-primary'],
+                            'attr' => ['class' => 'btn text-center btn-primary my-custom-btn']
                         ],
                     ] : [],
                     []

@@ -89,7 +89,7 @@ class PackagesDataTable extends DataTable
         $buttons = [];
         if ($createPermission) {
             $buttons[] = Button::make('add')
-                ->attr(['class' => 'btn text-center btn-primary'])
+                ->attr(['class' => 'btn text-center btn-primary my-custom-btn'])
                 ->text(__('buttons.create'));
         }
         $dataTable->buttons($buttons);

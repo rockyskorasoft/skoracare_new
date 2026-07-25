@@ -4,13 +4,15 @@ namespace App\Models;
 
 use App\Helpers\DateHelper;
 use App\Helpers\UserHelper;
+use App\Traits\ClinicTrait;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\Activitylog\Models\Activity as ModelsActivity;
 
-#[Fillable(['log_name', 'description', 'subject', 'causer', 'attribute_changes', 'properties', 'batch_uuid', 'ip_address', 'created_by'])]
+#[Fillable(['log_name', 'description', 'subject', 'causer', 'attribute_changes', 'properties', 'batch_uuid', 'ip_address', 'clinic_id', 'created_by'])]
 class Activity extends ModelsActivity
 {
+    use ClinicTrait;
     /**
      * Set audit fields before creating activity log.
      */

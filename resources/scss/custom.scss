@@ -1380,7 +1380,7 @@ a {
             .sidebar-auth-profile {
                 .auth-img {
                     width: 10rem;
-                    filter: drop-shadow(0rem 0.706rem 0.706rem rgba(0, 0, 0, 0.25));
+                    filter: drop-shadow(0rem 0.706rem 0.706rem rgba(157, 31, 31, 0.25));
                     transform: translateY(-1.5rem);
                 }
             }
@@ -3933,8 +3933,27 @@ button.my-custom-btn,
     background: #0B7682 !important;
     border-color: #0B7682 !important;
     color: #ffffff !important;
-    border-radius: 8px !important;
-    padding: 10px 20px !important;
+
+    &:hover,
+    &:focus,
+    &:active {
+        background-color: #095f68 !important;
+        background: #095f68 !important;
+        border-color: #095f68 !important;
+        color: #ffffff !important;
+    }
+}
+
+// Custom DataTable Active Pagination Page Styling
+.pagination .page-item.active .page-link,
+.page-item.active .page-link,
+.dt-paging-button.active,
+.dataTables_wrapper .pagination .page-item.active .page-link,
+.yajra-table-custom-class .pagination .page-item.active .page-link {
+    background-color: #0B7682 !important;
+    background: #0B7682 !important;
+    border-color: #0B7682 !important;
+    color: #ffffff !important;
 
     &:hover,
     &:focus,

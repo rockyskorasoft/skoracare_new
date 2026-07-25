@@ -87,7 +87,7 @@
     ]
   },
   "resources/scss/custom.scss": {
-    "file": "assets/custom-5Xi-tqv4.css",
+    "file": "assets/custom-BMbld9JB.css",
     "name": "custom",
     "names": [
       "custom.css"
@@ -105,12 +105,12 @@
       "assets/Laila-Regular-Cszffzo3.ttf",
       "assets/Laila-Medium-BjqlY9ET.ttf",
       "assets/laila-SemiBold-CZAjUkjC.ttf",
-      "assets/Laila-Bold-g72P2L-l.ttf",
+      "assets/laila-Bold-g72P2L-l.ttf",
       "assets/search-mjaZLkQX.svg"
     ]
   },
   "resources/scss/fonts/Laila-Bold.ttf": {
-    "file": "assets/Laila-Bold-g72P2L-l.ttf",
+    "file": "assets/laila-Bold-g72P2L-l.ttf",
     "src": "resources/scss/fonts/Laila-Bold.ttf"
   },
   "resources/scss/fonts/Laila-Light.ttf": {
@@ -130,7 +130,7 @@
     "src": "resources/scss/fonts/Laila-SemiBold.ttf"
   },
   "resources/scss/fonts/laila-Bold.ttf": {
-    "file": "assets/Laila-Bold-g72P2L-l.ttf",
+    "file": "assets/laila-Bold-g72P2L-l.ttf",
     "src": "resources/scss/fonts/Laila-Bold.ttf"
   },
   "resources/scss/fonts/laila-SemiBold.ttf": {

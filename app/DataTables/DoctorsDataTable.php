@@ -78,7 +78,7 @@ class DoctorsDataTable extends DataTable
         $buttons = [];
         if ($createDoctor) {
             $buttons[] = Button::make('add')
-                ->attr(['class' => 'btn text-center btn-primary'])
+                ->attr(['class' => 'btn text-center btn-primary my-custom-btn'])
                 ->text(__('buttons.create'));
         }
         $dataTable->buttons($buttons);

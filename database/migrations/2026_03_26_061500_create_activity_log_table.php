@@ -19,6 +19,7 @@ return new class extends Migration
             $table->json('properties')->nullable();
             $table->uuid('batch_uuid')->nullable();
             $table->string('ip_address', 45)->nullable();
+            $table->unsignedBigInteger('clinic_id')->nullable()->index();
             $table->unsignedBigInteger('created_by')->nullable()->index();
             $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
