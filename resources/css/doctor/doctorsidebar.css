@@ -359,6 +359,7 @@ body.doctor-page {
     transition: margin-left var(--dr-transition);
     min-height: calc(100vh - var(--dr-header-height));
     background-color: #fafbfb;
+    width: calc(100% - var(--dr-sidebar-width));
 }
 
 /* ── Mobile Overlay & Responsive ─────────────────────────── */

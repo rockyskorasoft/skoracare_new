@@ -6,6 +6,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', __('labels.dashboard')) | {{ config('app.name', 'Skoracare') }}</title>
 
+    @include('layouts.partials.pwa-head')
+
     {{-- Google Fonts — Inter --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -110,6 +112,7 @@
         }());
     </script>
 
+    @include('layouts.partials.pwa-install-banner')
     @stack('scripts')
 </body>
 </html>
