@@ -111,26 +111,28 @@ class RolePermissionSeeder extends Seeder
             );
         }
 
-        // ── 7. Doctor Panel Feature Permissions ─────────────────────────────────────
-        $doctorPanelManagement = Permission::firstOrCreate(['name' => 'doctor-panel-management']);
-        $features = [
-            'appointment'   => 'Appointment',
-            'ask-skoracare' => 'Ask Skoracare',
-            'clinic'        => 'OPD Billing / Clinics',
-            'patients'      => 'All Patients',
-            'follow-up'     => 'Follow Up',
-            'pharmacy'      => 'Pharmacy',
-            'analytics'     => 'Data Analytics',
-            'messages'      => 'Messages',
+        // ── 7. Module Specific Management Permissions ──────────────────────────────
+        // Delete old combined doctor-panel-management parent if exists
+        Permission::where('name', 'doctor-panel-management')->delete();
+
+        $featureGroups = [
+            'appointment'   => 'appointment-management',
+            'ask-skoracare' => 'ask-skoracare-management',
+            'patients'      => 'patients-management',
+            'follow-up'     => 'follow-up-management',
+            'pharmacy'      => 'pharmacy-management',
+            'analytics'     => 'analytics-management',
+            'messages'      => 'messages-management',
         ];
 
-        foreach ($features as $featureCode => $featureLabel) {
+        foreach ($featureGroups as $featureCode => $parentName) {
+            $parentPermission = Permission::firstOrCreate(['name' => $parentName]);
+            $parentPermission->update(['parent_id' => null]);
+
             foreach (['list', 'create', 'edit', 'show', 'delete', 'export'] as $action) {
                 $permissionName = "{$featureCode}-{$action}";
-                Permission::firstOrCreate(
-                    ['name' => $permissionName],
-                    ['parent_id' => $doctorPanelManagement->id]
-                );
+                $perm = Permission::firstOrCreate(['name' => $permissionName]);
+                $perm->update(['parent_id' => $parentPermission->id]);
             }
         }
 
@@ -262,9 +264,7 @@ class RolePermissionSeeder extends Seeder
                 'is_popular' => false,
             ]
         );
-        $platinumPerms = Permission::where('parent_id', $doctorPanelManagement->id)
-            ->orWhere('parent_id', $dashboardManagementPermission->id)
-            ->pluck('id');
+        $platinumPerms = Permission::whereNotNull('parent_id')->pluck('id');
         $platinumPkg->permissions()->sync($platinumPerms);
     }
 }

@@ -103,7 +103,7 @@
                                                 <label class="form-check-label fw-semibold mb-0"
                                                     for="parent-{{ $category->id }}">
                                                     <i class="fa-solid fa-folder me-1 role-cat-icon"></i>
-                                                    {{ $category->name }}
+                                                    {{ ucwords(str_replace(['-', '_'], ' ', $category->name)) }}
                                                 </label>
                                             </div>
                                         </div>
@@ -120,7 +120,7 @@
                                                         {{ in_array($child->id, $packagePermissionIds) ? 'checked' : '' }}>
                                                     <label class="form-check-label mb-0"
                                                         for="child-{{ $child->id }}">
-                                                        {{ $child->name }}
+                                                        {{ ucwords(str_replace(['-', '_'], ' ', $child->name)) }}
                                                     </label>
                                                 </div>
                                             @endforeach

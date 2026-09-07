@@ -92,21 +92,21 @@
             @endcan
 
             {{-- 6. Appointment --}}
-            @if(auth()->user()->hasSidebarAccess('appointment', 'appointment-list'))
+            @can('appointment-list')
             <li class="dr-nav-item">
-                <a href="javascript:void(0);"
-                   class="dr-nav-link"
-                   title="Appointment">
+                <a href="{{ route('admin.appointments.index') }}"
+                   class="dr-nav-link {{ Request::routeIs('admin.appointments.*') ? 'active' : '' }}"
+                   title="{{ __('labels.appointments') }}">
                     <span class="dr-nav-icon-wrapper">
                         <i class="fa-regular fa-calendar-check"></i>
                     </span>
-                    <span class="dr-nav-label">Appointment</span>
+                    <span class="dr-nav-label">{{ __('labels.appointments') }}</span>
                 </a>
             </li>
-            @endif
+            @endcan
 
             {{-- 7. Ask Skoracare --}}
-            @if(auth()->user()->hasSidebarAccess('ask-skoracare', 'ask-skoracare-list'))
+            @can('ask-skoracare-list')
             <li class="dr-nav-item">
                 <a href="javascript:void(0);" class="dr-nav-link" title="Ask Skoracare">
                     <span class="dr-nav-icon-wrapper">
@@ -115,10 +115,10 @@
                     <span class="dr-nav-label">Ask Skoracare</span>
                 </a>
             </li>
-            @endif
+            @endcan
 
-            {{-- 8. OPD Billing / Clinics (@can / hasSidebarAccess guarded) --}}
-            @if(auth()->user()->can('clinic-list') || auth()->user()->hasSidebarAccess('clinic', 'clinic-list'))
+            {{-- 8. OPD Billing / Clinics --}}
+            @can('clinic-list')
             <li class="dr-nav-item">
                 <a href="{{ route('admin.clinics.index') }}"
                    class="dr-nav-link {{ Request::routeIs('admin.clinics.*') ? 'active' : '' }}"
@@ -130,10 +130,10 @@
                     <span class="dr-nav-label">OPD Billing</span>
                 </a>
             </li>
-            @endif
+            @endcan
 
             {{-- 9. All Patients --}}
-            @if(auth()->user()->hasSidebarAccess('patients', 'patients-list'))
+            @can('patients-list')
             <li class="dr-nav-item">
                 <a href="javascript:void(0);" class="dr-nav-link" title="All Patients">
                     <span class="dr-nav-icon-wrapper">
@@ -142,10 +142,10 @@
                     <span class="dr-nav-label">All Patients</span>
                 </a>
             </li>
-            @endif
+            @endcan
 
             {{-- 10. Follow Up --}}
-            @if(auth()->user()->hasSidebarAccess('follow-up', 'follow-up-list'))
+            @can('follow-up-list')
             <li class="dr-nav-item">
                 <a href="javascript:void(0);" class="dr-nav-link" title="Follow Up">
                     <span class="dr-nav-icon-wrapper">
@@ -154,10 +154,10 @@
                     <span class="dr-nav-label">Follow Up</span>
                 </a>
             </li>
-            @endif
+            @endcan
 
             {{-- 11. Pharmacy --}}
-            @if(auth()->user()->hasSidebarAccess('pharmacy', 'pharmacy-list'))
+            @can('pharmacy-list')
             <li class="dr-nav-item">
                 <a href="javascript:void(0);" class="dr-nav-link" title="Pharmacy">
                     <span class="dr-nav-icon-wrapper">
@@ -166,10 +166,10 @@
                     <span class="dr-nav-label">Pharmacy</span>
                 </a>
             </li>
-            @endif
+            @endcan
 
             {{-- 12. Analytics --}}
-            @if(auth()->user()->hasSidebarAccess('analytics', 'analytics-list'))
+            @can('analytics-list')
             <li class="dr-nav-item">
                 <a href="javascript:void(0);" class="dr-nav-link" title="Analytics">
                     <span class="dr-nav-icon-wrapper">
@@ -178,10 +178,10 @@
                     <span class="dr-nav-label">Analytics</span>
                 </a>
             </li>
-            @endif
+            @endcan
 
             {{-- 13. Messages --}}
-            @if(auth()->user()->hasSidebarAccess('messages', 'messages-list'))
+            @can('messages-list')
             <li class="dr-nav-item">
                 <a href="javascript:void(0);" class="dr-nav-link" title="Messages">
                     <span class="dr-nav-icon-wrapper">
@@ -190,7 +190,7 @@
                     <span class="dr-nav-label">Messages</span>
                 </a>
             </li>
-            @endif
+            @endcan
 
             {{-- 14. Activity Log (@can guarded) --}}
             @can('activity-log-list')

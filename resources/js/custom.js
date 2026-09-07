@@ -1,5 +1,4 @@
 import './bootstrap';
-import '../images/murphy-medical-solutions-logo.png';
 import '../images/skoracare-logo.png';
 import '../images/skoracare-login.png';
 import '../images/logo.jpg';

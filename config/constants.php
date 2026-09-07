@@ -16,4 +16,16 @@ return [
     'default_image' => 'resources/images/user-avtar.svg',
     'support_phone' => '+91 921 7375 831 / 835',
     'support_email' => 'info@skoracares.com',
+    'appointment_statuses' => [
+        'queue' => 'Queue',
+        'draft' => 'Draft',
+        'finished' => 'Finished',
+        'cancelled' => 'Cancelled',
+        'referral' => 'Referral',
+    ],
+    'appointment_visit_types' => [
+        'walk_in' => 'Walk-In',
+        'online' => 'Online',
+        'follow_up' => 'Follow-Up',
+    ],
 ];

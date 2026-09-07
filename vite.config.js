@@ -14,6 +14,7 @@ export default defineConfig({
                 /* Doctor Panel — isolated CSS bundles */
                 "resources/css/doctor/doctorsidebar.css",
                 "resources/css/doctor/doctordashboard.css",
+                "resources/css/appointment.css",
             ],
             refresh: true,
         }),
