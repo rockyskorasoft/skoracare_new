@@ -136,6 +136,20 @@ class RolePermissionSeeder extends Seeder
             }
         }
 
+        // ── 7b. Landing Page Management ────────────────────────────────────────────
+        $landingPageManagement = Permission::firstOrCreate(['name' => 'landing-page-management']);
+        $landingPageManagement->update(['parent_id' => null]);
+        foreach ([
+            'landing-page-list',
+            'landing-page-create',
+            'landing-page-edit',
+            'landing-page-show',
+            'landing-page-delete',
+        ] as $permissionName) {
+            $perm = Permission::firstOrCreate(['name' => $permissionName]);
+            $perm->update(['parent_id' => $landingPageManagement->id]);
+        }
+
         // ── 8. Create & Assign Roles ────────────────────────────────────────────────
         $allPermissions = Permission::all();
 

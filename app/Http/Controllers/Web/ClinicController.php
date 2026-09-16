@@ -31,6 +31,15 @@ class ClinicController extends WebController
         $this->middleware(['permission:clinic-edit'], ['only' => ['edit', 'update']]);
         $this->middleware(['permission:clinic-delete'], ['only' => ['destroy']]);
         $this->middleware(['permission:clinic-show'], ['only' => ['show']]);
+
+        // Restrict clinic management CRUD routes to Super Admin only
+        $this->middleware(function ($request, $next) {
+            $user = auth()->user();
+            if (!$user || !$user->hasRole(config('constants.super_admin_role_name'))) {
+                abort(403, 'Unauthorized. Clinic management is restricted to Super Admin.');
+            }
+            return $next($request);
+        })->except(['switchClinic']);
     }
 
     /**
@@ -67,13 +76,21 @@ class ClinicController extends WebController
 
         try {
             $requestData = $this->clinicService->getDataFromRequest($request);
+            if (!empty($request->doctor_ids)) {
+                $requestData['doctor_id'] = $request->doctor_ids[0];
+            }
             if ($request->hasFile('logo')) {
                 $destinationPath = 'clinic_logos';
                 $requestData['logo'] = basename(UserHelper::uploadImage($request->file('logo'), $destinationPath));
             }
 
             $this->dbObject::beginTransaction();
-            $this->clinicService->createData($requestData);
+            $clinic = $this->clinicService->createData($requestData);
+
+            if ($request->has('doctor_ids') && is_array($request->doctor_ids)) {
+                $clinic->assignedUsers()->sync($request->doctor_ids);
+            }
+
             $this->dbObject::commit();
 
             return $this->successResponse('admin.clinics.index', trans('app.data_created', ['action' => 'Clinic']));
@@ -93,7 +110,16 @@ class ClinicController extends WebController
         $clinic = $this->clinicService->getDataById($clinicId);
         $doctors = User::role(config('constants.doctor_role_name'))->get();
 
-        return view('clinics.edit', compact('clinic', 'doctors'));
+        $assignedDoctorIds = $clinic->assignedUsers()
+            ->role(config('constants.doctor_role_name'))
+            ->pluck('users.id')
+            ->toArray();
+
+        if (empty($assignedDoctorIds) && $clinic->doctor_id) {
+            $assignedDoctorIds = [(int)$clinic->doctor_id];
+        }
+
+        return view('clinics.edit', compact('clinic', 'doctors', 'assignedDoctorIds'));
     }
 
     /**
@@ -103,8 +129,15 @@ class ClinicController extends WebController
     {
         $clinicId = SecureRouteParameter::decodeOrFail($id);
         $clinic = $this->clinicService->getDataById($clinicId);
+        $assignedDoctors = $clinic->assignedUsers()
+            ->role(config('constants.doctor_role_name'))
+            ->get();
 
-        return view('clinics.show', compact('clinic'));
+        if ($assignedDoctors->isEmpty() && $clinic->doctor) {
+            $assignedDoctors = collect([$clinic->doctor]);
+        }
+
+        return view('clinics.show', compact('clinic', 'assignedDoctors'));
     }
 
     /**
@@ -114,9 +147,12 @@ class ClinicController extends WebController
     {
         $clinicId = SecureRouteParameter::decodeOrFail($id);
         $requestData = $this->clinicService->getDataFromRequest($request);
+        if (!empty($request->doctor_ids)) {
+            $requestData['doctor_id'] = $request->doctor_ids[0];
+        }
         try {
+            $clinic = $this->clinicService->getDataById($clinicId);
             if ($request->hasFile('logo')) {
-                $clinic = $this->clinicService->getDataById($clinicId);
                 $destinationPath = 'clinic_logos';
                 $filename = $clinic->logo;
                 if (! empty($clinic->logo)) {
@@ -126,6 +162,17 @@ class ClinicController extends WebController
             }
             $this->dbObject::beginTransaction();
             $this->clinicService->updateData($clinicId, $requestData);
+
+            if ($request->has('doctor_ids') && is_array($request->doctor_ids)) {
+                // Preserve non-doctor staff assigned to this clinic
+                $staffIds = $clinic->assignedUsers()
+                    ->whereDoesntHave('roles', fn($q) => $q->where('name', config('constants.doctor_role_name')))
+                    ->pluck('users.id')
+                    ->toArray();
+                $allUserIds = array_unique(array_merge($request->doctor_ids, $staffIds));
+                $clinic->assignedUsers()->sync($allUserIds);
+            }
+
             $this->dbObject::commit();
 
             return $this->successResponse('admin.clinics.index', trans('app.data_updated', ['action' => 'Clinic']));

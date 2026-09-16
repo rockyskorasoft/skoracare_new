@@ -40,7 +40,21 @@ class ClinicsDataTable extends DataTable
                 return view('layouts.partials.dataTable-action-button', compact('editRoute', 'deleteRoute', 'viewRoute'));
             })
             ->addColumn('doctor_name', function ($row) {
-                return $row->doctor ? ($row->doctor->first_name . ' ' . $row->doctor->last_name) : 'N/A';
+                $doctors = $row->assignedUsers
+                    ->filter(fn($u) => $u->hasRole(config('constants.doctor_role_name')));
+
+                if ($doctors->isEmpty() && $row->doctor) {
+                    $doctors = collect([$row->doctor]);
+                }
+
+                if ($doctors->isEmpty()) {
+                    return 'N/A';
+                }
+
+                return $doctors->map(function ($doc) {
+                    $docName = trim(($doc->first_name ?? '') . ' ' . ($doc->last_name ?? ''));
+                    return '<span class="badge bg-light text-dark border me-1 mb-1"><i class="fa-solid fa-user-doctor me-1 text-primary"></i>' . e($docName ?: $doc->email) . '</span>';
+                })->implode(' ');
             })
             ->editColumn('consultation_fee', function ($row) {
                 return '₹' . number_format($row->consultation_fee, 2);
@@ -52,7 +66,7 @@ class ClinicsDataTable extends DataTable
                 $badgeClass = $row->status === 'active' ? 'bg-success' : 'bg-secondary';
                 return '<span class="badge ' . $badgeClass . '">' . ucfirst($row->status) . '</span>';
             })
-            ->rawColumns(['status', 'action'])
+            ->rawColumns(['status', 'action', 'doctor_name'])
             ->setRowId('id');
     }
 
@@ -61,11 +75,17 @@ class ClinicsDataTable extends DataTable
      */
     public function query(Clinic $model): QueryBuilder
     {
-        $query = $model->newQuery()->with('doctor');
+        $query = $model->newQuery()->with(['doctor', 'assignedUsers.roles']);
 
         // Scoped for Doctor role users
         if ($this->user && $this->user->hasRole(config('constants.doctor_role_name'))) {
-            $query->where('doctor_id', $this->user->id);
+            $userId = $this->user->id;
+            $query->where(function ($q) use ($userId) {
+                $q->where('doctor_id', $userId)
+                  ->orWhereHas('assignedUsers', function ($uq) use ($userId) {
+                      $uq->where('users.id', $userId);
+                  });
+            });
         }
 
         return $query;

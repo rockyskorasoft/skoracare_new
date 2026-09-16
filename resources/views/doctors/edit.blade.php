@@ -39,10 +39,18 @@
                         errorField="phone_no" />
 
                     <div class="col-md-6">
-                        <label for="password" class="form-label">{{ __('labels.password') }}</label>
+                        <label for="password" class="form-label">New Password</label>
                         <input type="password" name="password" id="password" class="form-control @error('password') is-invalid @enderror" placeholder="Leave blank to keep current">
                         <small class="text-muted">Minimum 6 characters</small>
                         @error('password')
+                            <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="password_confirmation" class="form-label">Confirm New Password</label>
+                        <input type="password" name="password_confirmation" id="password_confirmation" class="form-control @error('password_confirmation') is-invalid @enderror" placeholder="Confirm new password">
+                        @error('password_confirmation')
                             <span class="invalid-feedback" role="alert">{{ $message }}</span>
                         @enderror
                     </div>

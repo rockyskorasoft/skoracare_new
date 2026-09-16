@@ -34,9 +34,19 @@
                     <div class="detail-label">Clinic Name</div>
                     <div class="detail-value">{{ $clinic->name }}</div>
                 </div>
-                <div class="detail-item">
-                    <div class="detail-label">Owner (Doctor)</div>
-                    <div class="detail-value">{{ $clinic->doctor ? $clinic->doctor->name : 'N/A' }}</div>
+                <div class="detail-item full-width">
+                    <div class="detail-label">Assigned Doctor(s)</div>
+                    <div class="detail-value">
+                        @if(isset($assignedDoctors) && $assignedDoctors->isNotEmpty())
+                            @foreach($assignedDoctors as $doc)
+                                <span class="badge bg-light text-dark border me-1 mb-1 py-2 px-2"><i class="fa-solid fa-user-doctor me-1 text-primary"></i>Dr. {{ $doc->name }} ({{ $doc->email }})</span>
+                            @endforeach
+                        @elseif($clinic->doctor)
+                            <span class="badge bg-light text-dark border py-2 px-2"><i class="fa-solid fa-user-doctor me-1 text-primary"></i>Dr. {{ $clinic->doctor->name }} ({{ $clinic->doctor->email }})</span>
+                        @else
+                            N/A
+                        @endif
+                    </div>
                 </div>
                 <div class="detail-item">
                     <div class="detail-label">Phone Number</div>

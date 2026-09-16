@@ -29,6 +29,7 @@ class UpdateRequest extends FormRequest
             'first_name' => 'required|string|max:50',
             'last_name' => 'nullable|string|max:50',
             'email' => ['required', 'email', Rule::unique('users', 'email')->ignore($doctorId)->whereNull('deleted_at')],
+            'password' => 'nullable|string|min:6|confirmed',
             'phone_no' => ['nullable', 'digits_between:10,12', Rule::unique('users', 'phone_no')->ignore($doctorId)->whereNull('deleted_at')],
             'status' => ['required', new Enum(CommonStatus::class)],
             'qualification' => 'nullable|string|max:100',

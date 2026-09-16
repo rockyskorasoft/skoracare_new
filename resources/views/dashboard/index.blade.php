@@ -39,12 +39,12 @@
                 
                 {{-- Quick Actions --}}
                 <div class="dr-quick-actions mb-0">
-                    @can('clinic-list')
+                    @if(auth()->user()->hasRole(config('constants.super_admin_role_name')))
                         <a href="{{ route('admin.clinics.index') }}" class="dr-quick-btn dr-quick-btn-primary">
                             <i class="fa-solid fa-hospital"></i>
                             {{ __('labels.my_clinics') }}
                         </a>
-                    @endcan
+                    @endif
                     @can('doctor-list')
                         <a href="{{ route('admin.doctors.index') }}" class="dr-quick-btn dr-quick-btn-outline">
                             <i class="fa-solid fa-user-doctor"></i>
@@ -237,7 +237,7 @@
                 @if ($isDoctor || !empty($authUser->qualification) || !empty($authUser->registration_number))
                     {{-- Total Clinics --}}
                     @can('clinic-list')
-                        <a href="{{ route('admin.clinics.index') }}" class="dr-stat-card text-decoration-none">
+                        <div class="dr-stat-card">
                             <div class="dr-stat-icon">
                                 <i class="fa-solid fa-hospital"></i>
                             </div>
@@ -246,7 +246,7 @@
                                 <div class="dr-stat-value">{{ $clinicCount }}</div>
                                 <div class="dr-stat-sub">{{ __('labels.registered_clinics') }}</div>
                             </div>
-                        </a>
+                        </div>
                     @endcan
 
                     {{-- Qualification --}}
@@ -386,25 +386,14 @@
                             <h3 class="dr-card-title">
                                 {{ __('labels.my_clinics') }}
                             </h3>
-                            @can('clinic-create')
-                                @if(auth()->user()->canCreateClinic())
-                                    <a href="{{ route('admin.clinics.create') }}"
-                                       class="dr-quick-btn dr-quick-btn-primary"
-                                       style="padding:.35rem .85rem;font-size:.78rem; border-radius: 6px;">
-                                        <i class="fa-solid fa-plus"></i>
-                                        {{ __('labels.add_clinic') }}
-                                    </a>
-                                @else
-                                    <button type="button" 
-                                            class="dr-quick-btn dr-quick-btn-outline text-muted" 
-                                            disabled 
-                                            title="Clinic creation limit reached for your active package plan"
-                                            style="padding:.35rem .85rem;font-size:.78rem; border-radius: 6px; cursor: not-allowed; opacity: 0.6;">
-                                        <i class="fa-solid fa-lock"></i>
-                                        {{ __('labels.add_clinic') }} (Limit Reached)
-                                    </button>
-                                @endif
-                            @endcan
+                            @if(auth()->user()->hasRole(config('constants.super_admin_role_name')))
+                                <a href="{{ route('admin.clinics.create') }}"
+                                   class="dr-quick-btn dr-quick-btn-primary"
+                                   style="padding:.35rem .85rem;font-size:.78rem; border-radius: 6px;">
+                                    <i class="fa-solid fa-plus"></i>
+                                    {{ __('labels.add_clinic') }}
+                                </a>
+                            @endif
                         </div>
                         <div class="dr-card-body">
 
@@ -428,18 +417,16 @@
                                     </div>
                                     <h5>No Clinics Registered</h5>
                                     <p class="mb-0">You don't have any clinics registered under your account yet.</p>
-                                    @can('clinic-create')
-                                        @if(auth()->user()->canCreateClinic())
-                                            <a href="{{ route('admin.clinics.create') }}" class="dr-quick-btn dr-quick-btn-primary mt-3">
-                                                <i class="fa-solid fa-plus"></i>
-                                                Register First Clinic
-                                            </a>
-                                        @endif
-                                    @endcan
+                                    @if(auth()->user()->hasRole(config('constants.super_admin_role_name')))
+                                        <a href="{{ route('admin.clinics.create') }}" class="dr-quick-btn dr-quick-btn-primary mt-3">
+                                            <i class="fa-solid fa-plus"></i>
+                                            Register First Clinic
+                                        </a>
+                                    @endif
                                 </div>
                             @endforelse
 
-                            @if ($clinicCount > 5)
+                            @if ($clinicCount > 5 && auth()->user()->hasRole(config('constants.super_admin_role_name')))
                                 <div class="mt-3 text-center">
                                     <a href="{{ route('admin.clinics.index') }}"
                                        style="font-size:.82rem;color:var(--dr-teal);text-decoration:none;font-weight:600; display: inline-flex; align-items: center; gap: .3rem;">

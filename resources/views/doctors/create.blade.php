@@ -37,6 +37,14 @@
                         type="number" :value="old('phone_no')" placeholder="Phone Number"
                         errorField="phone_no" />
 
+                    <x-input-field class="col-md-6" label="Login Password" name="password" id="password"
+                        type="password" placeholder="Minimum 6 characters"
+                        errorField="password" labelClass="required" />
+
+                    <x-input-field class="col-md-6" label="Confirm Password" name="password_confirmation" id="password_confirmation"
+                        type="password" placeholder="Confirm password"
+                        errorField="password_confirmation" labelClass="required" />
+
                     <x-input-field class="col-md-6" label="Qualification" name="qualification" id="qualification"
                         type="text" :value="old('qualification')" placeholder="MBBS, MD"
                         errorField="qualification" />

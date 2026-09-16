@@ -35,6 +35,20 @@
             </li>
             @endcan
 
+            {{-- Clinics (Super Admin only - placed directly above Doctors) --}}
+            @if(auth()->user()->hasRole(config('constants.super_admin_role_name')))
+            <li class="dr-nav-item">
+                <a href="{{ route('admin.clinics.index') }}"
+                   class="dr-nav-link {{ Request::routeIs('admin.clinics.*') ? 'active' : '' }}"
+                   title="{{ __('labels.clinics') }}">
+                    <span class="dr-nav-icon-wrapper">
+                        <i class="fa-solid fa-hospital"></i>
+                    </span>
+                    <span class="dr-nav-label">{{ __('labels.clinics') }}</span>
+                </a>
+            </li>
+            @endif
+
             {{-- 3. Doctors (@can guarded) --}}
             @can('doctor-list')
             <li class="dr-nav-item">
@@ -105,6 +119,21 @@
             </li>
             @endcan
 
+            {{-- Landing Pages (@can guarded) --}}
+            @can('landing-page-list')
+            <li class="dr-nav-item">
+                <a href="{{ route('admin.landing-pages.index') }}"
+                   class="dr-nav-link {{ Request::routeIs('admin.landing-pages.*') ? 'active' : '' }}"
+                   title="Landing Pages">
+                    <span class="dr-nav-icon-wrapper">
+                        <i class="fa-solid fa-globe"></i>
+                    </span>
+                    <span class="dr-nav-label">Landing Pages</span>
+                </a>
+            </li>
+            @endcan
+
+
             {{-- 7. Ask Skoracare --}}
             @can('ask-skoracare-list')
             <li class="dr-nav-item">
@@ -117,11 +146,10 @@
             </li>
             @endcan
 
-            {{-- 8. OPD Billing / Clinics --}}
-            @can('clinic-list')
+            {{-- 8. OPD Billing --}}
             <li class="dr-nav-item">
-                <a href="{{ route('admin.clinics.index') }}"
-                   class="dr-nav-link {{ Request::routeIs('admin.clinics.*') ? 'active' : '' }}"
+                <a href="javascript:void(0);"
+                   class="dr-nav-link"
                    title="OPD Billing">
                     <span class="dr-nav-icon-wrapper">
                         <i class="fa-solid fa-file-invoice-dollar"></i>
@@ -130,7 +158,6 @@
                     <span class="dr-nav-label">OPD Billing</span>
                 </a>
             </li>
-            @endcan
 
             {{-- 9. All Patients --}}
             @can('patients-list')

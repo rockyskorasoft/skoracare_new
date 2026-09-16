@@ -22,7 +22,8 @@ class UpdateRequest extends FormRequest
         return [
             'name' => 'required|string|max:150',
             'email' => 'nullable|email|max:150',
-            'doctor_id' => 'required|exists:users,id',
+            'doctor_ids' => 'required|array|min:1',
+            'doctor_ids.*' => 'exists:users,id',
             'phone_no' => 'nullable|digits_between:10,12',
             'consultation_fee' => 'required|numeric|min:0',
             'address' => 'required|string|max:500',

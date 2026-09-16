@@ -30,17 +30,17 @@
                         errorField="email" />
 
                     <div class="col-md-6">
-                        <label for="doctor_id" class="form-label required">Owner (Doctor)</label>
-                        <select name="doctor_id" id="doctor_id" class="form-select @error('doctor_id') is-invalid @enderror">
-                            <option value="">{{ __('labels.select') }}</option>
+                        <label for="doctor_ids" class="form-label required">Assign Doctor(s)</label>
+                        <select name="doctor_ids[]" id="doctor_ids" class="form-select multiSelectSearch @error('doctor_ids') is-invalid @enderror" multiple="multiple" data-placeholder="Select Doctors">
                             @foreach ($doctors as $doctor)
-                                <option value="{{ $doctor->id }}" {{ old('doctor_id', auth()->user()->hasRole(config('constants.doctor_role_name')) ? auth()->id() : '') == $doctor->id ? 'selected' : '' }}>
+                                <option value="{{ $doctor->id }}" {{ (is_array(old('doctor_ids')) && in_array($doctor->id, old('doctor_ids'))) ? 'selected' : '' }}>
                                     Dr. {{ $doctor->first_name }} {{ $doctor->last_name }} ({{ $doctor->email }})
                                 </option>
                             @endforeach
                         </select>
-                        @error('doctor_id')
-                            <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                        <small class="text-muted">You can select multiple doctors for this clinic</small>
+                        @error('doctor_ids')
+                            <span class="invalid-feedback d-block" role="alert">{{ $message }}</span>
                         @enderror
                     </div>
 

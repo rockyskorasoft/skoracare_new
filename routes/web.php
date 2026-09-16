@@ -3,10 +3,12 @@
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PublicLandingPageController;
 use App\Http\Controllers\Web\ActivityLogController;
 use App\Http\Controllers\Web\AuthController;
 use App\Http\Controllers\Web\DashboardController;
 use App\Http\Controllers\Web\DoctorController;
+use App\Http\Controllers\Web\LandingPageController;
 use App\Http\Controllers\Web\PackageController;
 use App\Http\Controllers\Web\ClinicController;
 use App\Http\Controllers\Web\RoleController;
@@ -54,7 +56,13 @@ Route::middleware(['auth'])->as('admin.')->group(function () {
     Route::get('/appointments/search-patients', [\App\Http\Controllers\Web\AppointmentController::class, 'searchPatients'])->name('appointments.search-patients');
     Route::post('/appointments/{appointment}/status', [\App\Http\Controllers\Web\AppointmentController::class, 'updateStatus'])->name('appointments.update-status');
     Route::resource('appointments', \App\Http\Controllers\Web\AppointmentController::class);
+
+    /* ── Landing Page Module Routes ── */
+    Route::resource('landing-pages', LandingPageController::class);
 });
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
+/* ── Public Landing Page (no auth required) ── */
+Route::get('/lp/{slug}',       [PublicLandingPageController::class, 'show'])->name('landing-page.public');
+Route::post('/lp/{slug}/book', [PublicLandingPageController::class, 'book'])->name('landing-page.book');

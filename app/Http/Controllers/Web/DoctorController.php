@@ -15,6 +15,7 @@ use App\Services\UserService;
 use App\Support\SecureRouteParameter;
 use DB;
 use Exception;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 
 class DoctorController extends WebController
@@ -75,6 +76,9 @@ class DoctorController extends WebController
     {
         try {
             $requestData = $this->userService->getDataFromRequest($request);
+            if ($request->filled('password')) {
+                $requestData['password'] = Hash::make($request->password);
+            }
             if ($request->hasFile('profile_pic')) {
                 $destinationPath = 'profile_images';
                 $requestData['profile_pic'] = basename(UserHelper::uploadImage($request->file('profile_pic'), $destinationPath));
@@ -173,6 +177,11 @@ class DoctorController extends WebController
     {
         $doctorId = SecureRouteParameter::decodeOrFail($id);
         $requestData = $this->userService->getDataFromRequest($request);
+        if ($request->filled('password')) {
+            $requestData['password'] = Hash::make($request->password);
+        } else {
+            unset($requestData['password']);
+        }
 
         try {
             if ($request->hasFile('profile_pic')) {

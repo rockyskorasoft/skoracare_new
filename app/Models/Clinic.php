@@ -72,4 +72,14 @@ class Clinic extends Model
     {
         return $this->belongsToMany(User::class, 'clinic_user', 'clinic_id', 'user_id')->withTimestamps();
     }
+
+    /**
+     * Get doctors assigned to this clinic.
+     */
+    public function doctors(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'clinic_user', 'clinic_id', 'user_id')
+            ->role(config('constants.doctor_role_name'))
+            ->withTimestamps();
+    }
 }
